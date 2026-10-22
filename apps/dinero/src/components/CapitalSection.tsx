@@ -10,6 +10,7 @@ import type { Profile } from '../profile';
 import { state } from '../tax/rules2026';
 import { commonRegionFor, compareSameAmount, nextEuros, SAVINGS_CITATION } from '../tax/savings';
 import { useTween } from '../useTween';
+import { CapitalExamples } from './CapitalExamples';
 import { seriesStyles } from './Legend';
 import { LineChart } from './LineChart';
 import { ForalNote } from './ForalNote';
@@ -46,6 +47,7 @@ export function CapitalSection({ profile, locale }: CapitalSectionProps) {
   return (
     <div {...stylex.props(prose.root)}>
       <p>{m.capital_intro()}</p>
+      <CapitalExamples locale={locale} />
       <ForalNote region={profile.region} />
       <div {...stylex.props(styles.controls)}>
         <NumberField

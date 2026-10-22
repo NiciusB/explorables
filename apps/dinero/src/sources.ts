@@ -8,6 +8,13 @@ export interface Source {
 }
 
 export const sources = {
+  smi2026: {
+    title:
+      'Real Decreto 126/2026, de 18 de febrero, por el que se fija el salario mínimo interprofesional para 2026',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2026-3815',
+    accessed: '2026-10-23',
+  },
   lirpf: {
     title:
       'Ley 35/2006, de 28 de noviembre, del Impuesto sobre la Renta de las Personas Físicas (texto consolidado)',
