@@ -1,0 +1,36 @@
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "ignorePatterns": ["**/src/paraglide/**"],
+  "rules": {
+    "unused-dev-dependencies": "error",
+    "unused-optional-dependencies": "error",
+    "unrendered-components": "error",
+    "unused-component-props": "error",
+    "css-token-drift": "error",
+    "css-duplicate-block": "error",
+    "css-selector-complexity": "error",
+    "css-dead-surface": "error",
+    "css-broken-reference": "error",
+    "type-only-dependencies": "error",
+    "test-only-dependencies": "error",
+    "dev-dependencies-in-production": "error",
+    "re-export-cycle": "error",
+    "package-cycle": "error",
+    "stale-suppressions": "error",
+    "require-suppression-reason": "error",
+    "deprecated-exports-in-use": "error",
+    "private-type-leaks": "error",
+    "weakened-tests": "error",
+    "test-only-branch": "error"
+  },
+  "health": {
+    "maxCyclomatic": 12,
+    "maxCognitive": 12,
+    "maxUnitSize": 50
+  },
+  "duplicates": {
+    "mode": "weak",
+    "minTokens": 40,
+    "minLines": 4
+  }
+}
