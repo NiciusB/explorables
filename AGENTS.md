@@ -9,11 +9,12 @@ An explorable explanation is an interactive piece of writing where the reader le
 A good explorable:
 
 - **Teaches one idea well.** Narrow scope, clear takeaway.
-- **Makes the reader an active participant.** An explorable is like a toy that teaches you. Sliders, draggable numbers, simulations, and small puzzles let them form and test hypotheses.
+- **Makes the reader an active participant.** An explorable is like a toy that teaches you. Sliders, draggable numbers, tooltips and hover effects, simulations, and small puzzles let them form and test hypotheses.
 - **Interleaves prose and interaction.** Text sets up a question, the interactive answers it, the text reflects on what the reader saw. Animations are better than 1000 words.
 - **Builds up gradually.** Start with a simple, concrete case, then add complexity one step at a time.
 - **Gives immediate feedback.** Every change the reader makes is reflected instantly.
 - **Works without instructions.** Controls are discoverable; defaults show something interesting before any interaction.
+- **Fully works on mobile**: Most people use the web on mobile phones nowadays. It should be 100% responsive and consider mobile on its designs and interactions.
 
 ### Examples
 
