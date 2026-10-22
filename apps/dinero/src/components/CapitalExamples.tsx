@@ -28,30 +28,40 @@ export function CapitalExamples({ locale }: { locale: Locale }) {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   }).format(annualRent / annualWage);
+  const examples = [
+    {
+      key: 'worker',
+      title: m.capital_examples_worker(),
+      amount: annualWage,
+      description: m.capital_examples_wage({ monthly: euros(MINIMUM_WAGE.monthly) }),
+    },
+    {
+      key: 'landlord',
+      title: m.capital_examples_landlord(),
+      amount: annualRent,
+      description: m.capital_examples_rent({ monthly: euros(monthlyRent) }),
+    },
+    {
+      key: 'investor',
+      title: m.capital_examples_investor(),
+      amount: annualRent,
+      description: m.capital_examples_dividends(),
+    },
+  ];
 
   return (
     <div {...stylex.props(prose.root)}>
       <h3 {...stylex.props(prose.subheading)}>{m.capital_examples_title()}</h3>
       <p>{m.capital_examples_intro()}</p>
       <div {...stylex.props(styles.cards)}>
-        <article {...stylex.props(styles.card)}>
-          <h4 {...stylex.props(styles.heading)}>{m.capital_examples_worker()}</h4>
-          <strong {...stylex.props(styles.amount)}>{euros(annualWage)}</strong>
-          <span {...stylex.props(prose.caption)}>{m.capital_examples_annual()}</span>
-          <p>{m.capital_examples_wage({ monthly: euros(MINIMUM_WAGE.monthly) })}</p>
-        </article>
-        <article {...stylex.props(styles.card)}>
-          <h4 {...stylex.props(styles.heading)}>{m.capital_examples_landlord()}</h4>
-          <strong {...stylex.props(styles.amount)}>{euros(annualRent)}</strong>
-          <span {...stylex.props(prose.caption)}>{m.capital_examples_annual()}</span>
-          <p>{m.capital_examples_rent({ monthly: euros(monthlyRent) })}</p>
-        </article>
-        <article {...stylex.props(styles.card)}>
-          <h4 {...stylex.props(styles.heading)}>{m.capital_examples_investor()}</h4>
-          <strong {...stylex.props(styles.amount)}>{euros(annualRent)}</strong>
-          <span {...stylex.props(prose.caption)}>{m.capital_examples_annual()}</span>
-          <p>{m.capital_examples_dividends()}</p>
-        </article>
+        {examples.map((example) => (
+          <article key={example.key} {...stylex.props(styles.card)}>
+            <h4 {...stylex.props(styles.heading)}>{example.title}</h4>
+            <strong {...stylex.props(styles.amount)}>{euros(example.amount)}</strong>
+            <span {...stylex.props(prose.caption)}>{m.capital_examples_annual()}</span>
+            <p>{example.description}</p>
+          </article>
+        ))}
       </div>
       <NumberField
         label={m.capital_examples_rent_label()}
