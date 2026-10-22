@@ -1,4 +1,5 @@
 import { m } from './paraglide/messages';
+import type { Community } from './inequality/data';
 import type { Region } from './tax/regions';
 
 export const REGION_NAMES: Record<Region, () => string> = {
@@ -22,3 +23,8 @@ export const REGION_NAMES: Record<Region, () => string> = {
   gipuzkoa: m.region_gipuzkoa,
   navarra: m.region_navarra,
 };
+
+/** A survey community's name: INE counts the three Basque territories as one. */
+export function communityName(community: Community): string {
+  return community === 'pais-vasco' ? m.region_pais_vasco() : REGION_NAMES[community]();
+}

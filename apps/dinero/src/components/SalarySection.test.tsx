@@ -3,7 +3,12 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 
 import { localStorageKey } from '../paraglide/runtime';
+import { useSalary } from '../useSalary';
 import { SalarySection } from './SalarySection';
+
+function Harness() {
+  return <SalarySection salary={useSalary()} locale="es" />;
+}
 
 // Intl output uses non-breaking spaces; normalise them so text matchers work.
 const normalised = (text: string) => text.replaceAll(/\s/g, ' ');
@@ -18,7 +23,7 @@ function inputValue(label: string): string {
 
 function renderSection() {
   localStorage.setItem(localStorageKey, 'es');
-  render(<SalarySection locale="es" />);
+  render(<Harness />);
 }
 
 afterEach(() => {

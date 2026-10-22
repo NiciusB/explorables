@@ -1,6 +1,7 @@
 import { mountApp } from '@explorables/ui';
 
 import { App } from './App';
+import '@fontsource-variable/fraunces/full.css';
 import './index.css';
 import { m } from './paraglide/messages';
 import { getLocale } from './paraglide/runtime';

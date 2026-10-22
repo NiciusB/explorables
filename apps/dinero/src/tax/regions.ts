@@ -10,7 +10,7 @@ export type Region = (typeof REGIONS)[number];
 
 export type TaxSystem = 'common' | 'basque' | 'navarra';
 
-const isCommon = (region: Region): region is CommonRegion =>
+export const isCommon = (region: Region): region is CommonRegion =>
   (COMMON_REGIONS as readonly string[]).includes(region);
 
 const isBasque = (region: Region): region is BasqueTerritory =>

@@ -1,4 +1,4 @@
-import { chart, colors, space } from '@explorables/ui/tokens.stylex';
+import { colors, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { useState } from 'react';
 
@@ -7,6 +7,7 @@ import { m } from '../paraglide/messages';
 import type { Locale } from '../paraglide/runtime';
 import { irpfRate, socialSecurityRate, type Step } from '../tax/marginal';
 import { useElementWidth } from '../useElementWidth';
+import { XTicks, YGrid } from './chartAxes';
 import { seriesStyles } from './Legend';
 
 const HEIGHT = 260;
@@ -15,8 +16,6 @@ const GAP = 2;
 /** Steps narrower than this (px) get no rate label. */
 const MIN_LABEL_WIDTH = 34;
 const Y_TICKS = [0, 0.25, 0.5, 0.75, 1];
-/** Room (px) a centred x tick label needs on its right. */
-const EDGE_TICK_ROOM = 40;
 
 export interface StaircaseProps {
   gross: number;
@@ -47,38 +46,20 @@ export function Staircase({ gross, steps, locale }: StaircaseProps) {
           setActive(null);
         }}
       >
-        {Y_TICKS.map((tick) => (
-          <g key={tick}>
-            <line
-              x1={MARGIN.left}
-              x2={MARGIN.left + plotWidth}
-              y1={y(tick)}
-              y2={y(tick)}
-              {...stylex.props(styles.grid)}
-            />
-            <text
-              x={MARGIN.left - 6}
-              y={y(tick)}
-              dy="0.32em"
-              textAnchor="end"
-              {...stylex.props(styles.tick)}
-            >
-              {formatPercent(tick, locale)}
-            </text>
-          </g>
-        ))}
-        {niceTicks(gross, width < 480 ? 3 : 5).map((tick) => (
-          <text
-            key={tick}
-            x={x(tick)}
-            y={HEIGHT - 10}
-            // A tick near the right edge would be clipped if centred.
-            textAnchor={x(tick) > width - EDGE_TICK_ROOM ? 'end' : 'middle'}
-            {...stylex.props(styles.tick)}
-          >
-            {formatEuros(tick, locale)}
-          </text>
-        ))}
+        <YGrid
+          ticks={Y_TICKS}
+          y={y}
+          left={MARGIN.left}
+          right={MARGIN.left + plotWidth}
+          format={(tick) => formatPercent(tick, locale)}
+        />
+        <XTicks
+          ticks={niceTicks(gross, width < 480 ? 3 : 5)}
+          x={x}
+          y={HEIGHT - 10}
+          width={width}
+          format={(tick) => formatEuros(tick, locale)}
+        />
 
         {steps.map((step, index) => {
           const left = x(step.from) + (index === 0 ? 0 : GAP / 2);
@@ -179,15 +160,6 @@ const styles = stylex.create({
     position: 'relative',
     width: '100%',
     margin: 0,
-  },
-  grid: {
-    stroke: chart.grid,
-    strokeWidth: 1,
-  },
-  tick: {
-    fontSize: 12,
-    fontVariantNumeric: 'tabular-nums',
-    fill: colors.textMuted,
   },
   step: {
     transition: 'opacity 120ms',

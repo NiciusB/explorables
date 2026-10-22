@@ -89,6 +89,100 @@ export const sources = {
     url: 'https://ww3.navarra.es/Renta22/DescargaProgramaRenta/NR/rdonlyres/MANUAL_TEORICO_RENTA_2022.pdf',
     accessed: '2026-10-22',
   },
+  lirpf1978: {
+    title: 'Ley 44/1978, de 8 de septiembre, del Impuesto sobre la Renta de las Personas Físicas',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/boe/dias/1978/09/11/pdfs/A21191-21199.pdf',
+    accessed: '2026-10-22',
+  },
+  rdl5_1992: {
+    title: 'Real Decreto-ley 5/1992, de 21 de julio, de Medidas Presupuestarias Urgentes',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/boe/dias/1992/07/23/pdfs/A25506-25508.pdf',
+    accessed: '2026-10-22',
+  },
+  lirpf1998: {
+    title:
+      'Ley 40/1998, de 9 de diciembre, del Impuesto sobre la Renta de las Personas Físicas y otras Normas Tributarias',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-1998-28472',
+    accessed: '2026-10-22',
+  },
+  lirpf2006Original: {
+    title:
+      'Ley 35/2006, de 28 de noviembre, del Impuesto sobre la Renta de las Personas Físicas (texto original)',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2006-20764',
+    accessed: '2026-10-22',
+  },
+  financiacion2009: {
+    title:
+      'Ley 22/2009, de 18 de diciembre, por la que se regula el sistema de financiación de las Comunidades Autónomas de régimen común',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2009-20375',
+    accessed: '2026-10-22',
+  },
+  presupuestos2011: {
+    title: 'Ley 39/2010, de 22 de diciembre, de Presupuestos Generales del Estado para el año 2011',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2010-19703',
+    accessed: '2026-10-22',
+  },
+  rdl20_2011: {
+    title:
+      'Real Decreto-ley 20/2011, de 30 de diciembre, de medidas urgentes en materia presupuestaria, tributaria y financiera para la corrección del déficit público',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2011-20638',
+    accessed: '2026-10-22',
+  },
+  ipc: {
+    title: 'Índice de Precios de Consumo. Índice general nacional y tasas de variación desde 1961',
+    publisher: 'Instituto Nacional de Estadística',
+    url: 'https://www.ine.es/jaxiT3/Tabla.htm?t=24077',
+    accessed: '2026-10-22',
+  },
+  epaDeciles: {
+    title:
+      'Encuesta de Población Activa. Decil de salarios del empleo principal: salarios medios y límite inferior de cada decil',
+    publisher: 'Instituto Nacional de Estadística',
+    url: 'https://www.ine.es/jaxiT3/Tabla.htm?t=66252',
+    accessed: '2026-10-22',
+  },
+  ecvDeciles: {
+    title:
+      'Encuesta de Condiciones de Vida. Límites inferiores de cada decil de renta por unidad de consumo',
+    publisher: 'Instituto Nacional de Estadística',
+    url: 'https://www.ine.es/jaxiT3/Tabla.htm?t=9957',
+    accessed: '2026-10-22',
+  },
+  ecvGini: {
+    title:
+      'Encuesta de Condiciones de Vida. Desigualdad en la distribución de ingresos (S80/S20 y coeficiente de Gini) por comunidades autónomas',
+    publisher: 'Instituto Nacional de Estadística',
+    url: 'https://www.ine.es/jaxiT3/Tabla.htm?t=76846',
+    accessed: '2026-10-22',
+  },
+  eff2024: {
+    title:
+      'Encuesta Financiera de las Familias (EFF) 2024: métodos, resultados y cambios desde 2022 (Documento Ocasional n.º 2610)',
+    publisher: 'Banco de España',
+    url: 'https://www.bde.es/f/webbe/SES/Secciones/Publicaciones/PublicacionesSeriadas/DocumentosOcasionales/26/Fich/do2610.pdf',
+    accessed: '2026-10-22',
+  },
+  widTopShares: {
+    title:
+      'World Inequality Database: participación en la renta antes de impuestos del 10 % y el 1 % con más renta, España (vía Our World in Data)',
+    publisher: 'World Inequality Lab / Our World in Data',
+    url: 'https://ourworldindata.org/grapher/income-share-top-10-before-tax-wid',
+    accessed: '2026-10-22',
+  },
+  rd806_2026: {
+    title:
+      'Real Decreto 806/2026, de 5 de octubre, de disolución del Congreso de los Diputados y del Senado y de convocatoria de elecciones',
+    publisher: 'Boletín Oficial del Estado',
+    url: 'https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742',
+    accessed: '2026-10-22',
+  },
 } as const satisfies Record<string, Source>;
 
 export type SourceId = keyof typeof sources;

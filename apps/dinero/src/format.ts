@@ -44,3 +44,10 @@ export function niceTicks(max: number, count = 5): number[] {
   for (let tick = 0; tick <= max + step * 1e-9; tick += step) ticks.push(tick);
   return ticks;
 }
+
+/** A plain number with at most `digits` decimals, e.g. 30.8 → "30,8". */
+export function formatNumber(value: number, locale: Locale, digits = 1): string {
+  return new Intl.NumberFormat(INTL_LOCALE[locale], { maximumFractionDigits: digits }).format(
+    value,
+  );
+}
