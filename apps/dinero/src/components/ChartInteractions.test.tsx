@@ -72,7 +72,16 @@ const charts = [
   },
   {
     name: 'net changes',
-    chart: <ChangeBars values={[-100, 200]} format={euros} label="Changes" />,
+    chart: (
+      <ChangeBars
+        items={[
+          { label: euros(5000), value: -100 },
+          { label: euros(200_000), value: 200 },
+        ]}
+        format={euros}
+        label="Changes"
+      />
+    ),
     expected: euros(-100),
   },
   {

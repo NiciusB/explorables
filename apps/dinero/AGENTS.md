@@ -11,7 +11,7 @@ All six chapters are built in Spanish and English. Salary input is optional: the
 - `src/tax/`: pure tax functions and data, every figure with its citation. `rules2026.ts` and `irpf.ts` are the common regime; `foral2026.ts` and `foral.ts` the Basque territories and Navarra; `regions.ts` dispatches by region (`salaryBreakdown`). `marginal.ts` turns any calculation into steps of constant marginal rates by sampling it, so phase-outs show up as real steps.
 - `src/history/`: published IRPF scales for 1979, 1992, 1999, 2007 and 2012, with a regional 2026 comparison. `src/prices.ts` converts pesetas and annual CPI into 2026 euros (2026 uses January–September).
 - `src/inequality/`: salary deciles (EPA 2006–2024), household income thresholds and regional Gini (ECV), wealth groups (EFF 2024), and top income shares (WID). `position.ts` contains percentile interpolation, consumption units and inflation adjustments.
-- `src/sandbox/`: editable scales, illustrative presets and effects on wage deciles. The current-scale preset encodes each half's personal allowance in zero-rate brackets to reproduce today's IRPF in every common-regime region.
+- `src/sandbox/`: editable scales, illustrative presets and effects on illustrative gross annual salaries. The current-scale preset encodes each half's personal allowance in zero-rate brackets to reproduce today's IRPF in every common-regime region.
 - `src/chapters.ts`, `App.tsx`: reading order, chapter map, sticky coin navigation and composition. `useSalary.ts` and `profile.ts` own shared salary state; chapter-specific controls stay local.
 - `src/components/`: section UI and reusable charts using `chart.*` from `@explorables/ui`. `theme.stylex.ts` supplies coin, paper and wealth colors and the self-hosted Fraunces heading font. `useTween` animates charts while respecting reduced motion.
 - `src/sources.ts`: the source registry shown at the bottom of the page.
@@ -29,7 +29,7 @@ All six chapters are built in Spanish and English. Salary input is optional: the
 3. **Current inequality.** Income and wealth distribution today.
 4. **Historical inequality.** How the distribution has evolved.
 5. **Salary vs. capital gains taxation.** Work income (escala general) vs. savings income (escala del ahorro). Examples compare the SMI, rental homes at a fixed 1,000 €/month each, and a salary matching their gross rent, with IRPF shares and rental costs shown separately. Only the number of homes is editable (three by default); costs per home stay fixed.
-6. **Design your IRPF.** Draw a marginal-rate curve with a finger or mouse (keyboard-accessible points), approximated with eight brackets; edit the exemption and exact brackets in an advanced section. Try illustrative presets and see changes in net income for the salary in use and each wage decile. Add party proposals with primary sources when available.
+6. **Design your IRPF.** Draw a marginal-rate curve with a finger or mouse (keyboard-accessible points), approximated with eight brackets; edit the exemption and exact brackets in an advanced section. Try illustrative presets and see changes in net income for the salary in use and illustrative gross yearly salaries from 5,000 € to 200,000 €. Add party proposals with primary sources when available.
 
 ## Comparison decisions
 

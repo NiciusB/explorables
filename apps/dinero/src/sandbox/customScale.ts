@@ -1,4 +1,3 @@
-import { SALARY_DECILES, LATEST_SALARY_YEAR } from '../inequality/data';
 import { commonIrpf, minimumWageDeduction } from '../tax/irpf';
 import { regionalRules, state, type CommonRegion } from '../tax/rules2026';
 import { combineScales, quotaAfterMinimum, rateAt, type Scale } from '../tax/scale';
@@ -106,18 +105,20 @@ export function designedMarginal(
   return taxableBase <= design.exempt ? 0 : rateAt(toScale(design.brackets), taxableBase) / 100;
 }
 
-/** Change in yearly net pay for the mean salary of each wage decile, today versus the design. */
-export function decileChanges(
+/** Illustrative gross annual salaries, not sampled population groups or taxable bases. */
+const EXAMPLE_SALARIES = [
+  5000, 15_000, 20_000, 25_000, 35_000, 50_000, 75_000, 100_000, 150_000, 200_000,
+];
+
+/** Change in yearly take-home pay for each gross salary, today's IRPF versus the design. */
+export function salaryChanges(
   design: Design,
   region: CommonRegion,
   situation: Situation,
-): number[] {
-  const deciles = SALARY_DECILES[LATEST_SALARY_YEAR];
-  if (deciles === undefined) return [];
-  return deciles.mean.map((monthly) => {
-    const gross = monthly * 12;
-    return (
-      commonIrpf(gross, region, situation).irpf - designedIrpf(gross, design, region, situation)
-    );
-  });
+): { gross: number; change: number }[] {
+  return EXAMPLE_SALARIES.map((gross) => ({
+    gross,
+    change:
+      commonIrpf(gross, region, situation).irpf - designedIrpf(gross, design, region, situation),
+  }));
 }

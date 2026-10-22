@@ -1,42 +1,35 @@
 import { chart, colors, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
 
-import { DECILES } from '../inequality/data';
 import { m } from '../paraglide/messages';
 import { useTween } from '../useTween';
 import { useChartTooltip } from './useChartTooltip';
 
 export interface ChangeBarsProps {
-  /** One change per decile, poorest first: positive means more money for that decile. */
-  values: readonly number[];
+  /** Labelled gross salaries and their changes in yearly take-home pay. */
+  items: readonly { label: string; value: number }[];
   format: (value: number) => string;
   label: string;
 }
 
 /** Ten rows of gains (right, blue) and losses (left, orange) around a zero line. */
-export function ChangeBars({ values, format, label }: ChangeBarsProps) {
+export function ChangeBars({ items, format, label }: ChangeBarsProps) {
   const tip = useChartTooltip(
-    DECILES.map((decile) =>
-      m.chart_change({
-        decile: String(decile),
-        value: format(values[decile - 1] ?? 0),
-      }),
-    ),
+    items.map((item) => m.chart_salary_change({ salary: item.label, value: format(item.value) })),
   );
+  const values = items.map((item) => item.value);
   const shown = useTween(values);
   const max = Math.max(1, ...values.map((value) => Math.abs(value)));
   return (
     <figure aria-label={label} {...stylex.props(styles.root)}>
       <ol {...stylex.props(styles.list)}>
-        {DECILES.map((decile) => {
-          const value = shown[decile - 1] ?? 0;
+        {items.map((item, index) => {
+          const value = shown[index] ?? 0;
           const share = `${String((Math.abs(value) / max) * 50)}%`;
           return (
-            <li key={decile} {...stylex.props(styles.row)}>
-              <span {...stylex.props(styles.decile)}>
-                {m.decile_short({ number: String(decile) })}
-              </span>
-              <span {...tip.target(decile - 1)} {...stylex.props(styles.track)}>
+            <li key={item.label} {...stylex.props(styles.row)}>
+              <span {...stylex.props(styles.salary)}>{item.label}</span>
+              <span {...tip.target(index)} {...stylex.props(styles.track)}>
                 <span {...stylex.props(styles.zero)} />
                 <span
                   {...stylex.props(
@@ -46,7 +39,7 @@ export function ChangeBars({ values, format, label }: ChangeBarsProps) {
                   )}
                 />
               </span>
-              <span {...stylex.props(styles.value)}>{format(values[decile - 1] ?? 0)}</span>
+              <span {...stylex.props(styles.value)}>{format(item.value)}</span>
             </li>
           );
         })}
@@ -68,12 +61,12 @@ const styles = stylex.create({
   },
   row: {
     display: 'grid',
-    gridTemplateColumns: '3.5em 1fr 6.5em',
+    gridTemplateColumns: '6em minmax(0, 1fr) 6.5em',
     alignItems: 'center',
     gap: space.sm,
     fontSize: 14,
   },
-  decile: { color: colors.textMuted },
+  salary: { color: colors.textMuted },
   track: { position: 'relative', height: 18 },
   zero: {
     position: 'absolute',

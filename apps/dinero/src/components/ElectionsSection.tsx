@@ -10,7 +10,7 @@ import type { Profile } from '../profile';
 import { REGION_NAMES } from '../regionNames';
 import {
   currentDesign,
-  decileChanges,
+  salaryChanges,
   designedIrpf,
   designedMarginal,
   PRESETS,
@@ -69,7 +69,7 @@ export function ElectionsSection({ profile, locale }: ElectionsSectionProps) {
   const euros = (value: number) => formatEuros(value, locale);
   const nowIrpf = commonIrpf(profile.gross, region, profile.situation).irpf;
   const designed = designedIrpf(profile.gross, design, region, profile.situation);
-  const changes = decileChanges(design, region, profile.situation);
+  const changes = salaryChanges(design, region, profile.situation);
   const choose = (preset: Preset) => {
     setDesign(editable(preset === 'current' ? today : PRESETS[preset]));
   };
@@ -128,12 +128,12 @@ export function ElectionsSection({ profile, locale }: ElectionsSectionProps) {
           descriptionId={drawingHint}
         />
         <section {...stylex.props(styles.benefits)}>
-          <h3 {...stylex.props(styles.benefitsTitle)}>{m.sandbox_deciles_title()}</h3>
-          <p {...stylex.props(prose.caption, styles.note)}>{m.sandbox_deciles_lede()}</p>
+          <h3 {...stylex.props(styles.benefitsTitle)}>{m.sandbox_salaries_title()}</h3>
+          <p {...stylex.props(prose.caption, styles.note)}>{m.sandbox_salaries_lede()}</p>
           <ChangeBars
-            values={changes}
+            items={changes.map(({ gross, change }) => ({ label: euros(gross), value: change }))}
             format={(value) => signedEuros(value, locale)}
-            label={m.sandbox_deciles_label()}
+            label={m.sandbox_salaries_label()}
           />
         </section>
       </div>

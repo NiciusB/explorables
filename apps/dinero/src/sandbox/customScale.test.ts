@@ -5,7 +5,7 @@ import { COMMON_REGIONS } from '../tax/rules2026';
 import { DEFAULT_SITUATION } from '../tax/situation';
 import {
   currentDesign,
-  decileChanges,
+  salaryChanges,
   designedIrpf,
   designedMarginal,
   PRESETS,
@@ -55,17 +55,28 @@ describe('designedIrpf', () => {
   });
 });
 
-describe('decileChanges', () => {
-  it('is zero for every decile under today’s design', () => {
-    const design = currentDesign('castilla-la-mancha', DEFAULT_SITUATION);
-    for (const change of decileChanges(design, 'castilla-la-mancha', DEFAULT_SITUATION)) {
-      expect(Math.abs(change)).toBeLessThan(0.01);
+describe('salaryChanges', () => {
+  it('uses explicit gross salaries and calculates each change from today’s IRPF', () => {
+    const examples = salaryChanges(PRESETS.flat, 'madrid', DEFAULT_SITUATION);
+    expect(examples.map(({ gross }) => gross)).toEqual([
+      5000, 15_000, 20_000, 25_000, 35_000, 50_000, 75_000, 100_000, 150_000, 200_000,
+    ]);
+    for (const { gross, change } of examples) {
+      expect(change).toBeCloseTo(
+        commonIrpf(gross, 'madrid', DEFAULT_SITUATION).irpf -
+          designedIrpf(gross, PRESETS.flat, 'madrid', DEFAULT_SITUATION),
+      );
     }
+    expect(examples[0]?.change).toBe(0);
+    expect(examples[9]?.change).toBeGreaterThan(0);
   });
 
-  it('gives the top decile a bigger cut than the bottom under a flat rate', () => {
-    const changes = decileChanges(PRESETS.flat, 'castilla-la-mancha', DEFAULT_SITUATION);
-    expect(changes).toHaveLength(10);
-    expect(changes[9] ?? 0).toBeGreaterThan(changes[0] ?? 0);
+  it('is zero for every salary under today’s design in every common-regime region', () => {
+    for (const region of COMMON_REGIONS) {
+      const design = currentDesign(region, DEFAULT_SITUATION);
+      for (const { change } of salaryChanges(design, region, DEFAULT_SITUATION)) {
+        expect(Math.abs(change)).toBeLessThan(0.01);
+      }
+    }
   });
 });

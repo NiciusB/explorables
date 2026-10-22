@@ -175,9 +175,13 @@ describe('App', () => {
     renderIn('en');
     const elections = chapter('Design your IRPF');
     const benefits = elections.getByRole('figure', {
-      name: 'Change in yearly net pay of each wage decile with your scale',
+      name: 'Change in yearly net pay by gross annual salary with your scale',
     });
     const initialBenefits = benefits.textContent;
+    expect(within(benefits).getByText('€5,000')).toBeDefined();
+    expect(within(benefits).getByText('€15,000')).toBeDefined();
+    expect(within(benefits).getByText('€200,000')).toBeDefined();
+    expect(within(benefits).queryByText('D1')).toBeNull();
     const point = elections.getByRole('slider', { name: 'Marginal rate from €20,000' });
     expect(point.getAttribute('aria-valuenow')).toBe('20');
     fireEvent.keyDown(point, { key: 'ArrowUp' });
