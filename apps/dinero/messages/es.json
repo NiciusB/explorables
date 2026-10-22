@@ -254,5 +254,10 @@
   "chart_gini_comparison": "{region}: {value}\nEspaña: {spain}",
   "chart_change": "Decil {decile}: {value} netos al año",
   "chart_journey_segment": "{label}: {amount} al año ({share} del bruto)",
-  "chart_income_segment": "{label}: {amount} al año ({share} del total)"
+  "chart_income_segment": "{label}: {amount} al año ({share} del total)",
+  "sandbox_draw_title": "Dibuja tu IRPF",
+  "sandbox_draw_hint": "Dibuja sobre el gráfico con el dedo o el ratón: más arriba significa un tipo marginal mayor. Aproximamos tu trazo con ocho tramos. Con teclado, usa Tab para elegir un punto y las flechas (↑ ↓: 1 punto, ← →: 5 puntos).",
+  "sandbox_draw_point": "Tipo marginal desde {amount}",
+  "sandbox_draw_note": "Eje horizontal: base liquidable anual, no sueldo bruto. Los primeros {exempt} siguen exentos. El último tipo continúa por encima de {maximum}. Abre la sección avanzada para editar el mínimo exento y los tramos exactos.",
+  "sandbox_advanced": "Avanzado: mínimo exento y tabla de tramos"
 }

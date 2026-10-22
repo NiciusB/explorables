@@ -149,6 +149,10 @@ describe('App', () => {
     editAmount(chapter('Your salary').getByLabelText('Amount'), 30_000);
     const elections = chapter('Design your IRPF');
     const initial = statValue('IRPF with your scale');
+    expect(elections.queryByLabelText('Bracket 1: rate (%)')).toBeNull();
+    fireEvent.click(
+      elections.getByRole('button', { name: 'Advanced: exemption and bracket table' }),
+    );
     const rate = elections.getByLabelText('Bracket 1: rate (%)');
     rate.focus();
     editAmount(rate, 30);
@@ -165,5 +169,73 @@ describe('App', () => {
     fireEvent.click(elections.getByRole('button', { name: "Today's in Community of Madrid" }));
     expect(statValue('IRPF with your scale')).toBe(statValue('IRPF today'));
     expect(statValue('Change in your net pay')).toBe(formatEuros(0, 'en'));
+  });
+
+  it('redraws the tax brackets with keyboard controls and keeps presets in sync', () => {
+    renderIn('en');
+    const elections = chapter('Design your IRPF');
+    const point = elections.getByRole('slider', { name: 'Marginal rate from €20,000' });
+    expect(point.getAttribute('aria-valuenow')).toBe('20');
+    fireEvent.keyDown(point, { key: 'ArrowUp' });
+    expect(point.getAttribute('aria-valuenow')).toBe('21');
+    fireEvent.keyDown(point, { key: 'End' });
+    expect(point.getAttribute('aria-valuenow')).toBe('100');
+    fireEvent.keyDown(point, { key: 'ArrowUp' });
+    expect(point.getAttribute('aria-valuenow')).toBe('100');
+    fireEvent.click(
+      elections.getByRole('button', { name: 'Advanced: exemption and bracket table' }),
+    );
+    expect(elections.getByLabelText('Bracket 3: rate (%)').getAttribute('value')).toBe('100');
+    fireEvent.click(elections.getByRole('button', { name: 'Flat 20%' }));
+    expect(point.getAttribute('aria-valuenow')).toBe('20');
+  });
+
+  it('fits a pointer stroke into brackets and stops drawing when cancelled', () => {
+    renderIn('en');
+    const elections = chapter('Design your IRPF');
+    const canvas = elections.getByRole('group', { name: 'Draw your IRPF' });
+    Object.defineProperty(canvas, 'setPointerCapture', { value: () => {} });
+    Object.defineProperty(canvas, 'getBoundingClientRect', {
+      value: () => ({ left: 0, top: 0, width: 600, height: 300 }),
+    });
+    const pointer = (type: string, clientX: number, clientY: number, pointerId = 1) => {
+      fireEvent(
+        canvas,
+        Object.assign(new MouseEvent(type, { bubbles: true, clientX, clientY, button: 0 }), {
+          pointerId,
+          isPrimary: true,
+        }),
+      );
+    };
+    pointer('pointerdown', 42, 18);
+    pointer('pointermove', 564, 254, 2);
+    expect(
+      elections
+        .getByRole('slider', { name: 'Marginal rate from €150,000' })
+        .getAttribute('aria-valuenow'),
+    ).toBe('20');
+    pointer('pointermove', 564, 254);
+    expect(
+      elections
+        .getByRole('slider', { name: 'Marginal rate from €0' })
+        .getAttribute('aria-valuenow'),
+    ).toBe('100');
+    expect(
+      elections
+        .getByRole('slider', { name: 'Marginal rate from €20,000' })
+        .getAttribute('aria-valuenow'),
+    ).toBe('87');
+    expect(
+      elections
+        .getByRole('slider', { name: 'Marginal rate from €150,000' })
+        .getAttribute('aria-valuenow'),
+    ).toBe('0');
+    pointer('pointercancel', 564, 254);
+    pointer('pointermove', 564, 18);
+    expect(
+      elections
+        .getByRole('slider', { name: 'Marginal rate from €150,000' })
+        .getAttribute('aria-valuenow'),
+    ).toBe('0');
   });
 });

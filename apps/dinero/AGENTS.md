@@ -29,7 +29,7 @@ All six chapters are built in Spanish and English. Salary input is optional: the
 3. **Current inequality.** Income and wealth distribution today.
 4. **Historical inequality.** How the distribution has evolved.
 5. **Salary vs. capital gains taxation.** Work income (escala general) vs. savings income (escala del ahorro).
-6. **Design your IRPF.** Edit exemptions and brackets, try illustrative presets, and see changes in net income for the salary in use and each wage decile. Add party proposals with primary sources when available.
+6. **Design your IRPF.** Draw a marginal-rate curve with a finger or mouse (keyboard-accessible points), approximated with eight brackets; edit the exemption and exact brackets in an advanced section. Try illustrative presets and see changes in net income for the salary in use and each wage decile. Add party proposals with primary sources when available.
 
 ## Comparison decisions
 

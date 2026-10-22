@@ -254,5 +254,10 @@
   "chart_gini_comparison": "{region}: {value}\nSpain: {spain}",
   "chart_change": "Decile {decile}: {value} net per year",
   "chart_journey_segment": "{label}: {amount} per year ({share} of gross)",
-  "chart_income_segment": "{label}: {amount} per year ({share} of total)"
+  "chart_income_segment": "{label}: {amount} per year ({share} of total)",
+  "sandbox_draw_title": "Draw your IRPF",
+  "sandbox_draw_hint": "Draw across the chart with your finger or mouse: higher means a higher marginal rate. We fit eight tax brackets to your stroke. With a keyboard, Tab to a point and use the arrow keys (↑ ↓: 1 point, ← →: 5 points).",
+  "sandbox_draw_point": "Marginal rate from {amount}",
+  "sandbox_draw_note": "Horizontal axis: yearly taxable base, not gross salary. The first {exempt} stays exempt. The last rate continues above {maximum}. Open the advanced section to edit the exemption and exact brackets.",
+  "sandbox_advanced": "Advanced: exemption and bracket table"
 }

@@ -61,6 +61,11 @@ export default defineConfig({
     },
     overrides: [
       {
+        // SVG chart points need ARIA roles: HTML groups and range inputs cannot replace SVG shapes.
+        files: ['apps/dinero/src/components/DrawScale.tsx'],
+        rules: { 'jsx-a11y/prefer-tag-over-role': 'off' },
+      },
+      {
         // Tooling configs must default-export.
         files: ['**/vite.config.ts'],
         rules: { 'import/no-default-export': 'off' },

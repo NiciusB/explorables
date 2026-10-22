@@ -1,4 +1,4 @@
-import { NumberField } from '@explorables/ui';
+import { Disclosure, NumberField } from '@explorables/ui';
 import { colors, fonts, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { useState } from 'react';
@@ -21,6 +21,7 @@ import { commonIrpf } from '../tax/irpf';
 import { commonRegionFor } from '../tax/savings';
 import { whimsy } from '../theme.stylex';
 import { ChangeBars } from './ChangeBars';
+import { DrawScale } from './DrawScale';
 import { ForalNote } from './ForalNote';
 import { SourceNote } from './SourceNote';
 import { Stat, StatRow } from './Stat';
@@ -112,7 +113,16 @@ export function ElectionsSection({ profile, locale }: ElectionsSectionProps) {
         </button>
       </fieldset>
 
-      <BracketEditor design={design} onChange={setDesign} locale={locale} />
+      <DrawScale
+        design={design}
+        onChange={(next) => {
+          setDesign(editable(next));
+        }}
+        locale={locale}
+      />
+      <Disclosure title={m.sandbox_advanced()}>
+        <BracketEditor design={design} onChange={setDesign} locale={locale} />
+      </Disclosure>
 
       <StatRow>
         <Stat label={m.sandbox_stat_now()} value={euros(nowIrpf)} />
