@@ -176,6 +176,7 @@ const styles = stylex.create({
     display: 'block',
     width: '100%',
     touchAction: 'none',
+    userSelect: 'none',
     cursor: 'crosshair',
     overflow: 'visible',
   },
