@@ -1,0 +1,13 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "site_title": "Explorables",
+  "site_lede": "Interactive essays: ideas that make more sense when you can touch them.",
+  "site_intro": "Each explorable teaches one idea by letting you play with it. Change a number, drag a control, and see what happens. No formulas to memorise: the text asks a question and the interactive model lets you answer it.",
+  "explorables_title": "Explorables",
+  "dinero_title": "Money and inequality in Spain",
+  "dinero_description": "Enter your salary and see, euro by euro, how much income tax (IRPF) takes and why. Coming soon: how that has changed over the years and how you compare with everyone else.",
+  "status_in_progress": "In progress",
+  "open_explorable": "Open",
+  "inspiration": "Inspired by Bret Victor's explorable explanations and the explorabl.es collection.",
+  "language": "Language"
+}

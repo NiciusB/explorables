@@ -1,0 +1,13 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "site_title": "Explorables",
+  "site_lede": "Ensayos interactivos: ideas que se entienden mejor tocándolas.",
+  "site_intro": "Cada explorable enseña una idea dejándote jugar con ella. Cambia un número, arrastra un control y mira qué pasa. Sin fórmulas que memorizar: el texto plantea una pregunta y el modelo interactivo te deja responderla.",
+  "explorables_title": "Explorables",
+  "dinero_title": "Dinero y desigualdad en España",
+  "dinero_description": "Introduce tu sueldo y descubre, euro a euro, cuánto se lleva el IRPF y por qué. Pronto: cómo ha cambiado con los años y cómo se compara con el resto.",
+  "status_in_progress": "En construcción",
+  "open_explorable": "Abrir",
+  "inspiration": "Inspirado por las «explorable explanations» de Bret Victor y la colección de explorabl.es.",
+  "language": "Idioma"
+}

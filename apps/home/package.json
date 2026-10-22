@@ -1,0 +1,19 @@
+{
+  "name": "@explorables/home",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "@explorables/ui": "^0.0.0",
+    "@stylexjs/stylex": "^0.19.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@explorables/vite-config": "^0.0.0"
+  }
+}
