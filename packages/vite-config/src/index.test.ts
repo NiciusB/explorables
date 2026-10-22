@@ -16,4 +16,8 @@ describe('defineExplorableConfig', () => {
     expect(config.build?.outDir).toBe('../../dist');
     expect(config.build?.emptyOutDir).toBe(false);
   });
+
+  it('polls for file changes so the dev server picks up edits', () => {
+    expect(defineExplorableConfig().server?.watch?.usePolling).toBe(true);
+  });
 });

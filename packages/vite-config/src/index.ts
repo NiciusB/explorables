@@ -28,6 +28,11 @@ export function defineExplorableConfig({ path }: ExplorableOptions = {}): UserCo
       stylexPlugin(),
       react(),
     ],
+    server: {
+      // fs.watch delivers no change events on our macOS setup, so without polling the dev
+      // server never sees edits and keeps serving stale code until restarted.
+      watch: { usePolling: true },
+    },
     build: {
       outDir: path === undefined ? '../../dist' : `../../dist/${path}`,
       // The root app shares `dist/` with every other app, so only sub-path apps clear their folder.
