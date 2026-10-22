@@ -2,6 +2,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 
 import { localStorageKey } from '../paraglide/runtime';
+import { formatDate } from '../format';
 import { sources } from '../sources';
 import { Sources } from './Sources';
 
@@ -16,12 +17,12 @@ describe('Sources', () => {
     render(<Sources locale="es" />);
 
     for (const source of Object.values(sources)) {
-      expect(screen.getByRole('link', { name: source.title }).getAttribute('href')).toBe(
-        source.url,
+      const link = screen.getByRole('link', { name: source.title });
+      expect(link.getAttribute('href')).toBe(source.url);
+      expect(link.closest('li')?.textContent).toContain(
+        `Consultado el ${formatDate(source.accessed, 'es')}`,
       );
     }
-    expect(screen.getAllByText(/Consultado el 22 de octubre de 2026/)).toHaveLength(
-      Object.keys(sources).length,
-    );
+    expect(screen.getAllByRole('listitem')).toHaveLength(Object.keys(sources).length);
   });
 });
