@@ -8,9 +8,8 @@ import { m } from '../paraglide/messages';
 import type { Locale } from '../paraglide/runtime';
 import { REGION_NAMES } from '../regionNames';
 import { findHump, marginalRate, untaxedAmount } from '../salaryStory';
-import { commonIrpf } from '../tax/irpf';
 import { marginalSteps } from '../tax/marginal';
-import { COMMON_REGIONS, type CommonRegion } from '../tax/rules2026';
+import { REGIONS, salaryBreakdown, taxSystem, type Region, type TaxSystem } from '../tax/regions';
 import { grossFromInput, PAYMENTS, type PayBasis } from '../tax/salary';
 import { DEFAULT_SITUATION, type Situation } from '../tax/situation';
 import { JourneyBar } from './JourneyBar';
@@ -20,6 +19,11 @@ import { Staircase } from './Staircase';
 import { StepsTable } from './StepsTable';
 
 const DEFAULT_GROSS = 30_000;
+const HUMP_CAUSE: Record<TaxSystem, () => string> = {
+  common: m.hump_cause_common,
+  basque: m.hump_cause_basque,
+  navarra: m.hump_cause_navarra,
+};
 const MAX_AMOUNT = 1_000_000;
 const STEP_BY_BASIS: Record<PayBasis, number> = { grossYear: 1000, net12: 50, net14: 50 };
 
@@ -32,10 +36,11 @@ function amountFor(basis: PayBasis, net: number, gross: number): number {
 export function SalarySection({ locale }: { locale: Locale }) {
   const [amount, setAmount] = useState(DEFAULT_GROSS);
   const [basis, setBasis] = useState<PayBasis>('grossYear');
-  const [region, setRegion] = useState<CommonRegion>('andalucia');
+  const [region, setRegion] = useState<Region>('andalucia');
   const [situation, setSituation] = useState<Situation>(DEFAULT_SITUATION);
 
-  const calculate = (gross: number) => commonIrpf(gross, region, situation);
+  const calculate = (gross: number) => salaryBreakdown(gross, region, situation);
+  const system = taxSystem(region);
   const gross = grossFromInput(amount, basis, calculate);
   const breakdown = calculate(gross);
   const steps = marginalSteps(gross, calculate);
@@ -51,7 +56,7 @@ export function SalarySection({ locale }: { locale: Locale }) {
     { value: 'net12', label: m.pay_basis_net12() },
     { value: 'net14', label: m.pay_basis_net14() },
   ] as const satisfies readonly { value: PayBasis; label: string }[];
-  const regions = COMMON_REGIONS.map((value) => ({ value, label: REGION_NAMES[value]() })).toSorted(
+  const regions = REGIONS.map((value) => ({ value, label: REGION_NAMES[value]() })).toSorted(
     (a, b) => a.label.localeCompare(b.label, intlLocale(locale)),
   );
 
@@ -93,7 +98,7 @@ export function SalarySection({ locale }: { locale: Locale }) {
       </p>
 
       <Disclosure title={m.advanced_title()}>
-        <SituationForm situation={situation} onChange={setSituation} />
+        <SituationForm situation={situation} system={system} onChange={setSituation} />
       </Disclosure>
 
       <h3 {...stylex.props(styles.subheading)}>{m.journey_title()}</h3>
@@ -128,7 +133,8 @@ export function SalarySection({ locale }: { locale: Locale }) {
             from: euros(hump.from),
             to: euros(hump.to),
             rate: percent(hump.peakRate),
-          })}
+          })}{' '}
+          {HUMP_CAUSE[system]()}
         </p>
       )}
       <Disclosure title={m.table_toggle()}>
@@ -141,6 +147,7 @@ export function SalarySection({ locale }: { locale: Locale }) {
         <li>{m.assumption_contract()}</li>
         <li>{m.assumption_final()}</li>
         <li>{m.assumption_deductions()}</li>
+        <li>{m.assumption_children()}</li>
         <li>{m.assumption_year()}</li>
       </ul>
     </section>

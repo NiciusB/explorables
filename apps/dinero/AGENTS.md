@@ -4,11 +4,11 @@ An explorable about money and inequality in Spain. Spanish is the base locale (`
 
 ## Status
 
-Section 1 (your salary) is built for 2026 and the 15 common-regime communities. Navarra and the Basque territories (Álava, Bizkaia, Gipuzkoa) come next, then the remaining sections.
+Section 1 (your salary) is built for 2026 in every region: the 15 common-regime communities, the three Basque territories (Álava, Bizkaia, Gipuzkoa) and Navarra. Next: hand-picked historical years to compare, then the remaining sections.
 
 ## Code map
 
-- `src/tax/`: pure tax functions and data. `rules2026.ts` holds every figure with its citation; `irpf.ts` is the common-regime calculation; `marginal.ts` turns any calculation into steps of constant marginal rates by sampling it, so phase-outs show up as real steps.
+- `src/tax/`: pure tax functions and data, every figure with its citation. `rules2026.ts` and `irpf.ts` are the common regime; `foral2026.ts` and `foral.ts` the Basque territories and Navarra; `regions.ts` dispatches by region (`salaryBreakdown`). `marginal.ts` turns any calculation into steps of constant marginal rates by sampling it, so phase-outs show up as real steps.
 - `src/components/`: the section UI. Charts use the dataviz palette tokens from `@explorables/ui` (`chart.*`).
 - `src/sources.ts`: the source registry shown at the bottom of the page.
 
@@ -32,5 +32,7 @@ Section 1 (your salary) is built for 2026 and the 15 common-regime communities. 
 - Include employee Social Security contributions, since they sit between gross and net.
 - Model the final yearly tax for an employee filing individually with no other income. Include the state work reduction (art. 20), the minimum-wage deduction (DA 61.ª), and regional personal and family minimums. Regional deductions and the maternity deduction are out of scope and listed as assumptions on the page.
 - Every scale is transcribed with its published cumulative quota, and tests check the two agree.
+- Foral systems work differently and are modelled as such: Basque territories reduce work income with a bonificación and the quota with a flat minoración plus family/age/disability deductions (children under 6); Navarra turns its personal and family minimums into quota deductions, plus a work deduction. Álava's 68.20 € supplement for children aged 6 to 15 is not modelled.
+- Net pay must rise with gross in every region (tested), since net-to-gross conversion uses bisection.
 - Keep tax logic as pure, well-tested functions in this app until a second explorable needs it.
 - Cite the source (BOE, AEAT, community law) and the tax year for every scale.

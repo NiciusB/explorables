@@ -1,7 +1,7 @@
 import { m } from './paraglide/messages';
-import type { CommonRegion } from './tax/rules2026';
+import type { Region } from './tax/regions';
 
-export const REGION_NAMES: Record<CommonRegion, () => string> = {
+export const REGION_NAMES: Record<Region, () => string> = {
   andalucia: m.region_andalucia,
   aragon: m.region_aragon,
   asturias: m.region_asturias,
@@ -17,4 +17,8 @@ export const REGION_NAMES: Record<CommonRegion, () => string> = {
   madrid: m.region_madrid,
   murcia: m.region_murcia,
   valencia: m.region_valencia,
+  alava: m.region_alava,
+  bizkaia: m.region_bizkaia,
+  gipuzkoa: m.region_gipuzkoa,
+  navarra: m.region_navarra,
 };

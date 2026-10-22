@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 
 import { localStorageKey } from '../paraglide/runtime';
@@ -55,5 +56,18 @@ describe('SalarySection', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Menos' }));
 
     expect(screen.getByText(byText('Eso son 29.000 € brutos al año'))).toBeTruthy();
+  });
+
+  it('switches to the Basque rules and asks for children under 6 there', async () => {
+    renderSection();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('combobox', { name: 'Dónde vives' }));
+    await user.click(await screen.findByRole('option', { name: 'Bizkaia (País Vasco)' }));
+    await user.click(screen.getByRole('button', { name: /Tu situación personal/ }));
+
+    expect(screen.getByText(byText('Pagas 4495 € de IRPF al año'))).toBeTruthy();
+    expect(screen.getByLabelText('De ellos, menores de 6 años')).toBeTruthy();
+    expect(screen.queryByLabelText('De ellos, menores de 3 años')).toBeNull();
   });
 });

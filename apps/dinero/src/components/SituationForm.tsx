@@ -4,17 +4,24 @@ import * as stylex from '@stylexjs/stylex';
 import type { ReactNode } from 'react';
 
 import { m } from '../paraglide/messages';
+import type { TaxSystem } from '../tax/regions';
 import type { AgeGroup, Disability, Situation } from '../tax/situation';
 
 const MAX_CHILDREN = 10;
 
 export interface SituationFormProps {
   situation: Situation;
+  /** Decides which young-children age the form asks for: under 3, or under 6 in the Basque Country. */
+  system: TaxSystem;
   onChange: (situation: Situation) => void;
 }
 
 /** The personal circumstances that change the personal and family minimum. */
-export function SituationForm({ situation, onChange }: SituationFormProps) {
+export function SituationForm({ situation, system, onChange }: SituationFormProps) {
+  const youngChildren =
+    system === 'basque'
+      ? { key: 'childrenUnder6' as const, label: m.children_under6_label() }
+      : { key: 'childrenUnder3' as const, label: m.children_under3_label() };
   const update = (changes: Partial<Situation>) => {
     onChange({ ...situation, ...changes });
   };
@@ -50,7 +57,11 @@ export function SituationForm({ situation, onChange }: SituationFormProps) {
           label={m.children_label()}
           value={situation.children}
           onChange={(children) => {
-            update({ children, childrenUnder3: Math.min(situation.childrenUnder3, children) });
+            update({
+              children,
+              childrenUnder3: Math.min(situation.childrenUnder3, children),
+              childrenUnder6: Math.min(situation.childrenUnder6, children),
+            });
           }}
           min={0}
           max={MAX_CHILDREN}
@@ -58,10 +69,10 @@ export function SituationForm({ situation, onChange }: SituationFormProps) {
           incrementLabel={m.increase()}
         />
         <NumberField
-          label={m.children_under3_label()}
-          value={situation.childrenUnder3}
-          onChange={(childrenUnder3) => {
-            update({ childrenUnder3 });
+          label={youngChildren.label}
+          value={situation[youngChildren.key]}
+          onChange={(count) => {
+            update({ [youngChildren.key]: count });
           }}
           min={0}
           max={situation.children}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vite-plus/test';
 
 import { state } from './rules2026';
-import { DEFAULT_SITUATION, personalMinimum } from './situation';
+import { DEFAULT_SITUATION, perChild, personalMinimum } from './situation';
 
 const minimums = state.minimums;
 
@@ -44,5 +44,13 @@ describe('personalMinimum', () => {
     expect(personalMinimum(minimums, { ...DEFAULT_SITUATION, disability: 'severe' })).toBe(
       5550 + 9000 + 3000,
     );
+  });
+});
+
+describe('perChild', () => {
+  it('repeats the last amount for later children', () => {
+    expect(perChild([1, 2, 3], 0)).toBe(0);
+    expect(perChild([1, 2, 3], 2)).toBe(3);
+    expect(perChild([1, 2, 3], 5)).toBe(1 + 2 + 3 + 3 + 3);
   });
 });
