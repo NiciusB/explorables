@@ -38,6 +38,8 @@ Each explorable is its own app under `apps/<explorable-name>/`, with its own `AG
 
 The site is one static folder served by nginx at explorables.balbona.me. `vp run build:site` clears `dist/` and builds every app into it: `home` at the root, each explorable in `dist/<path>/` with `base: '/<path>/'`. Apps are separate Vite builds so each keeps its own dependencies and bundle. Locale choice is shared across apps through Paraglide's `localStorage` key (same origin).
 
+CD: on push to `main`, after `check` passes, CI's `deploy` job SSHes into the server with the `DEPLOY_SSH_KEY` secret, whose `authorized_keys` entry forces `scripts/deploy.sh` (pull, `npm ci`, `build:site`, rsync into `/var/www/explorables`). The nginx config lives on the server at `/etc/nginx/conf.d/explorables.conf`.
+
 To add an explorable: create `apps/<path>/` with `defineExplorableConfig({ path: '<path>' })`, then list it in `apps/home/src/explorables.ts`.
 
 ## Stack

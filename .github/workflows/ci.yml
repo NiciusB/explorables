@@ -15,3 +15,20 @@ jobs:
           node-version: '24'
           cache: true
       - run: vp run check
+
+  deploy:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency: deploy
+    steps:
+      # The key's authorized_keys entry forces scripts/deploy.sh (command="...",restrict).
+      - name: Deploy over SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "s.balbona.me ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsxzF5K7DSmGrPSwQgNdG0N7p+HdX+Nq+7I9pv3Nmev" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key ubuntu@s.balbona.me /home/ubuntu/apps/explorables/scripts/deploy.sh
