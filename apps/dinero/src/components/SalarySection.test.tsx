@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 
+import { formatEuros } from '../format';
 import { localStorageKey } from '../paraglide/runtime';
 import { useSalary } from '../useSalary';
 import { SalarySection } from './SalarySection';
@@ -35,24 +36,34 @@ describe('SalarySection', () => {
   it('shows something interesting before any interaction', () => {
     renderSection();
 
-    expect(inputValue('Importe')).toBe('30.000 €');
-    expect(screen.getByText(byText('Eso son 30.000 € brutos al año'))).toBeTruthy();
+    expect(inputValue('Importe')).toBe('1350 €');
+    expect(screen.getByRole('radio', { name: 'Neto al mes, 12 pagas' })).toHaveProperty(
+      'checked',
+      true,
+    );
+    expect(screen.getByRole('combobox', { name: 'Dónde vives' }).textContent).toContain(
+      'Comunidad de Madrid',
+    );
+    expect(screen.getByText(byText('1350 € netos al mes en 12 pagas'))).toBeTruthy();
     expect(screen.getByText(byText('6,50 € van a la Seguridad Social'))).toBeTruthy();
-    // 30,000 € crosses the zone where two phase-outs overlap.
-    expect(screen.getByText(byText('Fíjate en el escalón entre'))).toBeTruthy();
   });
 
-  it('keeps the same salary when switching how it is expressed', () => {
+  it('keeps the same salary when switching how it is expressed', async () => {
     renderSection();
-    const equivalents = screen.getByText(byText('Eso son 30.000 € brutos al año'));
-    const net12 = /(\d+\.?\d*) € netos al mes en 12 pagas/.exec(
-      normalised(equivalents.textContent),
+    const user = userEvent.setup();
+    const equivalents = screen.getByText(byText('brutos al año')).textContent;
+    await user.click(screen.getByRole('radio', { name: 'Neto al mes, 14 pagas' }));
+    expect(inputValue('Importe')).toBe(normalised(formatEuros((1350 * 12) / 14, 'es')));
+    await user.click(screen.getByRole('radio', { name: 'Bruto al año' }));
+    expect(screen.getByText('al año, antes de impuestos y cotizaciones')).toBeTruthy();
+    await user.click(screen.getByRole('radio', { name: 'Neto al mes, 12 pagas' }));
+    expect(inputValue('Importe')).toBe('1350 €');
+    expect(screen.getByText(byText('brutos al año')).textContent).toBe(equivalents);
+    await user.click(screen.getByRole('radio', { name: 'Neto al mes, 12 pagas' }));
+    expect(screen.getByRole('radio', { name: 'Neto al mes, 12 pagas' })).toHaveProperty(
+      'checked',
+      true,
     );
-
-    fireEvent.click(screen.getByRole('button', { name: 'Neto al mes, 12 pagas' }));
-
-    expect(inputValue('Importe')).toBe(`${net12?.[1] ?? ''} €`);
-    expect(screen.getByText(byText('brutos al año'))).toBeTruthy();
   });
 
   it('updates the breakdown when the salary changes', () => {
@@ -60,13 +71,18 @@ describe('SalarySection', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Menos' }));
 
-    expect(screen.getByText(byText('Eso son 29.000 € brutos al año'))).toBeTruthy();
+    expect(inputValue('Importe')).toBe('1300 €');
+    expect(screen.getByText(byText('1300 € netos al mes en 12 pagas'))).toBeTruthy();
   });
 
   it('switches to the Basque rules and asks for children under 6 there', async () => {
     renderSection();
     const user = userEvent.setup();
 
+    await user.click(screen.getByRole('radio', { name: 'Bruto al año' }));
+    const input = screen.getByLabelText('Importe');
+    fireEvent.change(input, { target: { value: '30000' } });
+    fireEvent.blur(input);
     await user.click(screen.getByRole('combobox', { name: 'Dónde vives' }));
     await user.click(await screen.findByRole('option', { name: 'Bizkaia (País Vasco)' }));
     await user.click(screen.getByRole('button', { name: /Tu situación personal/ }));

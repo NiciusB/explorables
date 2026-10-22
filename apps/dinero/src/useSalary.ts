@@ -9,12 +9,13 @@ import { grossFromInput, PAYMENTS, type PayBasis } from './tax/salary';
 import { DEFAULT_SITUATION, type Situation } from './tax/situation';
 import { marginalRate } from './salaryStory';
 
-const DEFAULT_GROSS = 30_000;
-const DEFAULT_REGION: Region = 'andalucia';
+const DEFAULT_REGION: Region = 'madrid';
+const DEFAULT_BASIS: PayBasis = 'net12';
+const DEFAULT_AMOUNT = 1_350;
 
 /** Converts a gross yearly salary to the amount shown for `basis`. */
 function amountFor(basis: PayBasis, net: number, gross: number): number {
-  return basis === 'grossYear' ? gross : Math.round(net / PAYMENTS[basis]);
+  return basis === 'grossYear' ? gross : net / PAYMENTS[basis];
 }
 
 /** The salary chapter's inputs, everything derived from them, and the profile for the rest. */
@@ -37,8 +38,8 @@ export interface SalaryState {
 
 /** Holds the salary at the top of the page so every chapter can personalise its examples. */
 export function useSalary(): SalaryState {
-  const [amount, setAmountState] = useState(DEFAULT_GROSS);
-  const [basis, setBasisState] = useState<PayBasis>('grossYear');
+  const [amount, setAmountState] = useState(DEFAULT_AMOUNT);
+  const [basis, setBasisState] = useState<PayBasis>(DEFAULT_BASIS);
   const [region, setRegionState] = useState<Region>(DEFAULT_REGION);
   const [situation, setSituationState] = useState<Situation>(DEFAULT_SITUATION);
   const [personal, setPersonal] = useState(false);
@@ -73,7 +74,7 @@ export function useSalary(): SalaryState {
     },
     setBasis: (next) => {
       // Keep the same salary, expressed the new way.
-      setAmountState(amountFor(next, breakdown.net, Math.round(gross)));
+      setAmountState(amountFor(next, breakdown.net, gross));
       setBasisState(next);
     },
     setRegion: (next) => {
@@ -85,8 +86,8 @@ export function useSalary(): SalaryState {
       setPersonal(true);
     },
     reset: () => {
-      setAmountState(DEFAULT_GROSS);
-      setBasisState('grossYear');
+      setAmountState(DEFAULT_AMOUNT);
+      setBasisState(DEFAULT_BASIS);
       setRegionState(DEFAULT_REGION);
       setSituationState(DEFAULT_SITUATION);
       setPersonal(false);

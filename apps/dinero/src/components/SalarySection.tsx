@@ -1,17 +1,15 @@
-import { Disclosure, NumberField, SegmentedControl, Select } from '@explorables/ui';
+import { Disclosure } from '@explorables/ui';
 import { colors, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { formatEuros, formatPercent, intlLocale } from '../format';
+import { formatEuros, formatPercent } from '../format';
 import { m } from '../paraglide/messages';
 import type { Locale } from '../paraglide/runtime';
-import { REGION_NAMES } from '../regionNames';
 import { findHump, marginalRate, untaxedAmount } from '../salaryStory';
-import { REGIONS, taxSystem, type TaxSystem } from '../tax/regions';
-import type { PayBasis } from '../tax/salary';
+import { taxSystem, type TaxSystem } from '../tax/regions';
 import type { SalaryState } from '../useSalary';
 import { JourneyBar } from './JourneyBar';
 import { Legend } from './Legend';
-import { SituationForm } from './SituationForm';
+import { SalarySetup } from './SalarySetup';
 import { Staircase } from './Staircase';
 import { StepsTable } from './StepsTable';
 
@@ -20,8 +18,6 @@ const HUMP_CAUSE: Record<TaxSystem, () => string> = {
   basque: m.hump_cause_basque,
   navarra: m.hump_cause_navarra,
 };
-const MAX_AMOUNT = 1_000_000;
-const STEP_BY_BASIS: Record<PayBasis, number> = { grossYear: 1000, net12: 50, net14: 50 };
 
 export interface SalarySectionProps {
   salary: SalaryState;
@@ -30,65 +26,17 @@ export interface SalarySectionProps {
 
 /** Chapter 1: the reader's salary, from gross to net, euro by euro. */
 export function SalarySection({ salary, locale }: SalarySectionProps) {
-  const { amount, basis, region, situation, gross, breakdown, steps } = salary;
+  const { region, gross, breakdown, steps } = salary;
   const system = taxSystem(region);
   const hump = findHump(steps);
   const untaxed = untaxedAmount(steps);
   const euros = (value: number) => formatEuros(value, locale);
-  const percent = (value: number) => formatPercent(value, locale);
   const per100 = (part: number) =>
     formatEuros(gross > 0 ? (part / gross) * 100 : 0, locale, { cents: true });
 
-  const bases = [
-    { value: 'grossYear', label: m.pay_basis_gross_year() },
-    { value: 'net12', label: m.pay_basis_net12() },
-    { value: 'net14', label: m.pay_basis_net14() },
-  ] as const satisfies readonly { value: PayBasis; label: string }[];
-  const regions = REGIONS.map((value) => ({ value, label: REGION_NAMES[value]() })).toSorted(
-    (a, b) => a.label.localeCompare(b.label, intlLocale(locale)),
-  );
-
   return (
     <div {...stylex.props(styles.section)}>
-      <p>{m.salary_prompt()}</p>
-
-      <div {...stylex.props(styles.controls)}>
-        <NumberField
-          label={m.salary_amount_label()}
-          value={amount}
-          onChange={salary.setAmount}
-          min={0}
-          max={MAX_AMOUNT}
-          step={STEP_BY_BASIS[basis]}
-          format={{ style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }}
-          locale={intlLocale(locale)}
-          decrementLabel={m.decrease()}
-          incrementLabel={m.increase()}
-        />
-        <Select
-          label={m.region_label()}
-          options={regions}
-          value={region}
-          onChange={salary.setRegion}
-        />
-      </div>
-      <SegmentedControl
-        label={m.pay_basis_label()}
-        options={bases}
-        value={basis}
-        onChange={salary.setBasis}
-      />
-      <p {...stylex.props(styles.muted)}>
-        {m.salary_equivalents({
-          gross: euros(gross),
-          net12: euros(breakdown.net / 12),
-          net14: euros(breakdown.net / 14),
-        })}
-      </p>
-
-      <Disclosure title={m.advanced_title()}>
-        <SituationForm situation={situation} system={system} onChange={salary.setSituation} />
-      </Disclosure>
+      <SalarySetup salary={salary} locale={locale} />
 
       <h3 {...stylex.props(styles.subheading)}>{m.journey_title()}</h3>
       <p>
@@ -103,7 +51,7 @@ export function SalarySection({ salary, locale }: SalarySectionProps) {
       <p {...stylex.props(styles.muted)}>
         {m.journey_effective({
           irpf: euros(breakdown.irpf),
-          rate: percent(gross > 0 ? breakdown.irpf / gross : 0),
+          rate: formatPercent(gross > 0 ? breakdown.irpf / gross : 0, locale),
         })}{' '}
         {m.journey_slices_hint()}
       </p>
@@ -114,14 +62,14 @@ export function SalarySection({ salary, locale }: SalarySectionProps) {
       <Legend />
       {untaxed > 0 ? <p>{m.staircase_free({ amount: euros(untaxed) })}</p> : null}
       {gross > untaxed ? (
-        <p>{m.staircase_marginal({ rate: percent(marginalRate(steps)) })}</p>
+        <p>{m.staircase_marginal({ rate: formatPercent(marginalRate(steps), locale) })}</p>
       ) : null}
       {hump === undefined ? null : (
         <p>
           {m.staircase_hump({
             from: euros(hump.from),
             to: euros(hump.to),
-            rate: percent(hump.peakRate),
+            rate: formatPercent(hump.peakRate, locale),
           })}{' '}
           {HUMP_CAUSE[system]()}
         </p>
@@ -155,12 +103,6 @@ const styles = stylex.create({
     fontSize: 22,
     marginTop: space.lg,
     marginBottom: 0,
-  },
-  controls: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap: space.md,
-    alignItems: 'end',
   },
   muted: {
     fontSize: 15,

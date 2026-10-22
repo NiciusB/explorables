@@ -11,6 +11,7 @@ export interface NumberFieldProps {
   /** Accessible names for the stepper buttons. */
   decrementLabel: string;
   incrementLabel: string;
+  size?: 'default' | 'large';
   min?: number;
   max?: number;
   step?: number;
@@ -25,6 +26,7 @@ export function NumberField({
   onChange,
   decrementLabel,
   incrementLabel,
+  size = 'default',
   min,
   max,
   step = 1,
@@ -53,7 +55,9 @@ export function NumberField({
         <BaseNumberField.Decrement aria-label={decrementLabel} {...stylex.props(styles.stepper)}>
           −
         </BaseNumberField.Decrement>
-        <BaseNumberField.Input {...stylex.props(styles.input)} />
+        <BaseNumberField.Input
+          {...stylex.props(styles.input, size === 'large' && styles.largeInput)}
+        />
         <BaseNumberField.Increment aria-label={incrementLabel} {...stylex.props(styles.stepper)}>
           +
         </BaseNumberField.Increment>
@@ -94,6 +98,11 @@ const styles = stylex.create({
     textAlign: 'center',
     color: colors.text,
     backgroundColor: 'transparent',
+  },
+  largeInput: {
+    fontSize: 'clamp(28px, 6vw, 40px)',
+    paddingBlock: space.md,
+    fontWeight: 600,
   },
   stepper: {
     width: 40,

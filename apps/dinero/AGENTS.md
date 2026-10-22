@@ -4,7 +4,7 @@ An explorable about money and inequality in Spain. Spanish is the base locale (`
 
 ## Status
 
-All six chapters are built in Spanish and English. Salary input is optional: the 30,000 € example is used until the reader edits their salary, region or situation. `useSalary` shares that profile across chapters; resetting restores the example. Chapter 6 currently offers a tax-scale sandbox; sourced party comparisons are still pending and must not be inferred from illustrative presets.
+All six chapters are built in Spanish and English. Salary input is optional: the 1,350 € net/month example (12 payments, Madrid) is used until the reader edits their salary, region or situation. `useSalary` shares that profile across chapters; resetting restores the example. Chapter 6 currently offers a tax-scale sandbox; sourced party comparisons are still pending and must not be inferred from illustrative presets.
 
 ## Code map
 

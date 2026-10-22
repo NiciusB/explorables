@@ -3,7 +3,7 @@
   "title": "Money and inequality in Spain",
   "lede": "How much you earn, how much you pay, and how that compares with everyone else. An interactive exploration built on official data.",
   "language": "Language",
-  "salary_prompt": "Let's start with something concrete: how much do you earn? Enter it the way you know it, gross per year or net per month.",
+  "salary_prompt": "How much do you earn? Pick the figure you know and let’s see where every euro goes.",
   "salary_amount_label": "Amount",
   "pay_basis_label": "How you're paid",
   "pay_basis_gross_year": "Gross per year",
@@ -226,5 +226,11 @@
   "sandbox_caveat": "Your scale replaces the state and regional ones together and applies to the taxable base; the work reductions and the minimum-wage deduction stay as today. We don't estimate how much the state would collect.",
   "region_pais_vasco": "Basque Country",
   "foral_note": "The Basque Country and Navarra have their own savings rules, so here we calculate as if you lived in {region}, whose scale and minimums are the state's.",
-  "source_label": "Source:"
+  "source_label": "Source:",
+  "salary_setup_title": "Your pay, your way",
+  "pay_hint_net12": "One payment every month",
+  "pay_hint_net14": "With two extra payments",
+  "pay_hint_gross": "Before tax and contributions",
+  "pay_amount_gross": "per year, before tax and contributions",
+  "pay_amount_net": "per payment, what reaches your account"
 }

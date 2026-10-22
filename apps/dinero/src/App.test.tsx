@@ -3,6 +3,9 @@ import { afterEach, describe, expect, it } from 'vite-plus/test';
 
 import { App } from './App';
 import { formatEuros } from './format';
+import { grossFromNet } from './tax/salary';
+import { salaryBreakdown } from './tax/regions';
+import { DEFAULT_SITUATION } from './tax/situation';
 import { localStorageKey, overwriteSetLocale, setLocale, type Locale } from './paraglide/runtime';
 
 function renderIn(locale: Locale) {
@@ -65,8 +68,14 @@ describe('App', () => {
       '#historia',
     );
     expect(history.getByText(/example salary's taxable base/)).toBeTruthy();
-    expect(rail.getByRole('link', { name: /Example salary/ }).textContent).toContain('30,000');
+    expect(rail.getByRole('link', { name: /Example salary/ }).textContent).toContain(
+      formatEuros(
+        grossFromNet(16_200, (gross) => salaryBreakdown(gross, 'madrid', DEFAULT_SITUATION)),
+        'en',
+      ),
+    );
 
+    fireEvent.click(salary.getByRole('radio', { name: 'Gross per year' }));
     editAmount(salary.getByLabelText('Amount'), 60_000);
 
     expect(history.getByText(/We're taking your taxable base along/)).toBeTruthy();
@@ -79,7 +88,12 @@ describe('App', () => {
     fireEvent.click(salary.getByRole('button', { name: 'Back to the example' }));
 
     expect(history.getByText(/example salary's taxable base/)).toBeTruthy();
-    expect(rail.getByRole('link', { name: /Example salary/ }).textContent).toContain('30,000');
+    expect(rail.getByRole('link', { name: /Example salary/ }).textContent).toContain(
+      formatEuros(
+        grossFromNet(16_200, (gross) => salaryBreakdown(gross, 'madrid', DEFAULT_SITUATION)),
+        'en',
+      ),
+    );
   });
 
   it('changes historical scales and plays the salary evolution through time', () => {
@@ -121,6 +135,7 @@ describe('App', () => {
     const initial = statValue('Taxes as savings');
     editAmount(capital.getByLabelText('Amount per year'), 100_000);
     expect(statValue('Taxes as savings')).not.toBe(initial);
+    fireEvent.click(chapter('Your salary').getByRole('radio', { name: 'Gross per year' }));
     editAmount(chapter('Your salary').getByLabelText('Amount'), 50_000);
     expect(capital.getByLabelText('Amount per year').getAttribute('value')).toBe('€100,000');
     fireEvent.click(capital.getByRole('button', { name: 'Use my salary' }));
@@ -130,6 +145,8 @@ describe('App', () => {
 
   it('recalculates the designed IRPF and keeps edited bracket inputs focused', () => {
     renderIn('en');
+    fireEvent.click(chapter('Your salary').getByRole('radio', { name: 'Gross per year' }));
+    editAmount(chapter('Your salary').getByLabelText('Amount'), 30_000);
     const elections = chapter('Design your IRPF');
     const initial = statValue('IRPF with your scale');
     const rate = elections.getByLabelText('Bracket 1: rate (%)');
@@ -145,8 +162,8 @@ describe('App', () => {
     if (firstRemove === undefined) throw new Error('No bracket to remove');
     fireEvent.click(firstRemove);
     expect(elections.queryByLabelText('Bracket 6: rate (%)')).toBeNull();
-    fireEvent.click(elections.getByRole('button', { name: "Today's in Andalusia" }));
+    fireEvent.click(elections.getByRole('button', { name: "Today's in Community of Madrid" }));
     expect(statValue('IRPF with your scale')).toBe(statValue('IRPF today'));
-    expect(statValue("Change in the example's net pay")).toBe(formatEuros(0, 'en'));
+    expect(statValue('Change in your net pay')).toBe(formatEuros(0, 'en'));
   });
 });

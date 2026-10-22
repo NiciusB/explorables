@@ -3,7 +3,7 @@
   "title": "Dinero y desigualdad en España",
   "lede": "Cuánto ganas, cuánto pagas y cómo se compara con el resto. Una exploración interactiva con datos oficiales.",
   "language": "Idioma",
-  "salary_prompt": "Empecemos por lo concreto: ¿cuánto cobras? Escríbelo como lo sepas, en bruto al año o en neto al mes.",
+  "salary_prompt": "¿Cuánto cobras? Elige la cifra que conoces y veamos adónde va cada euro.",
   "salary_amount_label": "Importe",
   "pay_basis_label": "Cómo lo cobras",
   "pay_basis_gross_year": "Bruto al año",
@@ -226,5 +226,11 @@
   "sandbox_caveat": "Tu tarifa sustituye a la estatal y a la autonómica juntas y se aplica a la base liquidable; las reducciones por trabajo y la deducción por salario mínimo se mantienen como hoy. No calculamos cuánto recaudaría el Estado.",
   "region_pais_vasco": "País Vasco",
   "foral_note": "En el País Vasco y Navarra las reglas del ahorro son otras, así que aquí calculamos como si vivieras en {region}, cuya tarifa y mínimos son los estatales.",
-  "source_label": "Fuente:"
+  "source_label": "Fuente:",
+  "salary_setup_title": "Tu sueldo, a tu manera",
+  "pay_hint_net12": "La misma paga cada mes",
+  "pay_hint_net14": "Con dos pagas extra",
+  "pay_hint_gross": "Antes de impuestos y cotizaciones",
+  "pay_amount_gross": "al año, antes de impuestos y cotizaciones",
+  "pay_amount_net": "por paga, lo que llega a tu cuenta"
 }
