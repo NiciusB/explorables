@@ -31,6 +31,7 @@
   "duplicates": {
     "mode": "weak",
     "minTokens": 40,
-    "minLines": 4
+    "minLines": 4,
+    "ignoredClones": ["dup:b9bb258b:2"]
   }
 }

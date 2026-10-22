@@ -7,3 +7,9 @@
 body {
   margin: 0;
 }
+
+/* Layout containers space their children with gap. */
+p,
+ul {
+  margin: 0;
+}
