@@ -12,6 +12,17 @@ export const colors = stylex.defineVars({
   accentText: { default: '#ffffff', [DARK]: '#16161a' },
 });
 
+/**
+ * Data-viz series colors: the first three slots of the validated categorical palette
+ * (dataviz reference palette), stepped separately for dark mode.
+ */
+export const chart = stylex.defineVars({
+  series1: { default: '#2a78d6', [DARK]: '#3987e5' },
+  series2: { default: '#eb6834', [DARK]: '#d95926' },
+  series3: { default: '#1baf7a', [DARK]: '#199e70' },
+  grid: { default: '#e6e4de', [DARK]: '#33333a' },
+});
+
 export const space = stylex.defineVars({
   xs: '4px',
   sm: '8px',
