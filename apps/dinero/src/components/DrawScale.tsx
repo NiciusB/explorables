@@ -1,6 +1,6 @@
-import { chart, colors, space } from '@explorables/ui/tokens.stylex';
+import { chart, colors } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { useId, useRef, type PointerEvent } from 'react';
+import { useRef, type PointerEvent } from 'react';
 
 import { formatEuros, formatPercent } from '../format';
 import { m } from '../paraglide/messages';
@@ -19,6 +19,7 @@ export interface DrawScaleProps {
   design: Design;
   onChange: (design: Design) => void;
   locale: Locale;
+  descriptionId: string;
 }
 
 const WIDTH = 600;
@@ -31,8 +32,7 @@ const x = (base: number) => LEFT + (base / DRAW_MAX) * (RIGHT - LEFT);
 const y = (rate: number) => BOTTOM - (rate / 100) * (BOTTOM - TOP);
 
 /** A touch canvas with focusable rate points as a keyboard alternative. */
-export function DrawScale({ design, onChange, locale }: DrawScaleProps) {
-  const description = useId();
+export function DrawScale({ design, onChange, locale, descriptionId }: DrawScaleProps) {
   const stroke = useRef<{ pointer: number; point: DrawPoint; design: Design } | null>(null);
   const scale = toScale(design.brackets);
   const rows = scale.filter((row) => row.from <= DRAW_MAX);
@@ -57,14 +57,11 @@ export function DrawScale({ design, onChange, locale }: DrawScaleProps) {
   return (
     <figure {...stylex.props(styles.root)}>
       <figcaption {...stylex.props(styles.title)}>{m.sandbox_draw_title()}</figcaption>
-      <p id={description} {...stylex.props(styles.hint)}>
-        {m.sandbox_draw_hint()}
-      </p>
       <svg
         viewBox={`0 0 ${String(WIDTH)} ${String(HEIGHT)}`}
         role="group"
         aria-label={m.sandbox_draw_title()}
-        aria-describedby={description}
+        aria-describedby={descriptionId}
         {...stylex.props(styles.canvas)}
         onPointerDown={(event) => {
           if (!event.isPrimary || event.button !== 0) return;
@@ -158,12 +155,6 @@ export function DrawScale({ design, onChange, locale }: DrawScaleProps) {
           );
         })}
       </svg>
-      <p {...stylex.props(styles.hint)}>
-        {m.sandbox_draw_note({
-          exempt: formatEuros(design.exempt, locale),
-          maximum: formatEuros(DRAW_MAX, locale),
-        })}
-      </p>
     </figure>
   );
 }
@@ -171,7 +162,6 @@ export function DrawScale({ design, onChange, locale }: DrawScaleProps) {
 const styles = stylex.create({
   root: { margin: 0, minWidth: 0 },
   title: { fontWeight: 600, fontSize: 20 },
-  hint: { color: colors.textMuted, fontSize: 14, marginBlock: space.sm },
   canvas: {
     display: 'block',
     width: '100%',

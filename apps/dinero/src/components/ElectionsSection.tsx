@@ -1,7 +1,7 @@
 import { Disclosure, NumberField } from '@explorables/ui';
 import { colors, fonts, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 import { formatEuros, formatPercent, intlLocale } from '../format';
 import { m } from '../paraglide/messages';
@@ -17,6 +17,7 @@ import {
   type Design,
   type DesignedBracket,
 } from '../sandbox/customScale';
+import { DRAW_MAX } from '../sandbox/drawScale';
 import { commonIrpf } from '../tax/irpf';
 import { commonRegionFor } from '../tax/savings';
 import { whimsy } from '../theme.stylex';
@@ -61,6 +62,7 @@ export interface ElectionsSectionProps {
 
 /** Chapter 6: 29-N is coming; meanwhile the reader designs their own IRPF scale. */
 export function ElectionsSection({ profile, locale }: ElectionsSectionProps) {
+  const drawingHint = useId();
   const region = commonRegionFor(profile.region);
   const today = currentDesign(region, profile.situation);
   const [design, setDesign] = useState(() => editable(PRESETS.flat));
@@ -113,13 +115,34 @@ export function ElectionsSection({ profile, locale }: ElectionsSectionProps) {
         </button>
       </fieldset>
 
-      <DrawScale
-        design={design}
-        onChange={(next) => {
-          setDesign(editable(next));
-        }}
-        locale={locale}
-      />
+      <p id={drawingHint} {...stylex.props(prose.caption, styles.note)}>
+        {m.sandbox_draw_hint()}
+      </p>
+      <div {...stylex.props(styles.workspace)}>
+        <DrawScale
+          design={design}
+          onChange={(next) => {
+            setDesign(editable(next));
+          }}
+          locale={locale}
+          descriptionId={drawingHint}
+        />
+        <section {...stylex.props(styles.benefits)}>
+          <h3 {...stylex.props(styles.benefitsTitle)}>{m.sandbox_deciles_title()}</h3>
+          <p {...stylex.props(prose.caption, styles.note)}>{m.sandbox_deciles_lede()}</p>
+          <ChangeBars
+            values={changes}
+            format={(value) => signedEuros(value, locale)}
+            label={m.sandbox_deciles_label()}
+          />
+        </section>
+      </div>
+      <p {...stylex.props(prose.caption, styles.note)}>
+        {m.sandbox_draw_note({
+          exempt: euros(design.exempt),
+          maximum: euros(DRAW_MAX),
+        })}
+      </p>
       <Disclosure title={m.sandbox_advanced()}>
         <BracketEditor design={design} onChange={setDesign} locale={locale} />
       </Disclosure>
@@ -143,13 +166,6 @@ export function ElectionsSection({ profile, locale }: ElectionsSectionProps) {
         />
       </StatRow>
 
-      <h3 {...stylex.props(prose.subheading)}>{m.sandbox_deciles_title()}</h3>
-      <p>{m.sandbox_deciles_lede()}</p>
-      <ChangeBars
-        values={changes}
-        format={(value) => signedEuros(value, locale)}
-        label={m.sandbox_deciles_label()}
-      />
       <p {...stylex.props(prose.caption)}>{m.sandbox_caveat()}</p>
     </div>
   );
@@ -263,6 +279,20 @@ function BracketEditor({ design, onChange, locale }: BracketEditorProps) {
 }
 
 const styles = stylex.create({
+  workspace: {
+    display: 'grid',
+    gridTemplateColumns: {
+      default: 'minmax(0, 1fr)',
+      '@media (min-width: 1000px)': 'minmax(0, 1.2fr) minmax(0, 1fr)',
+    },
+    gap: { default: space.md, '@media (min-width: 1000px)': space.lg },
+    alignItems: 'start',
+    alignSelf: 'center',
+    width: { default: '100%', '@media (min-width: 1000px)': 'min(1040px, calc(100vw - 64px))' },
+  },
+  benefits: { display: 'flex', flexDirection: 'column', gap: space.sm, minWidth: 0 },
+  benefitsTitle: { fontSize: 20, fontWeight: 600, margin: 0 },
+  note: { margin: 0 },
   ballot: {
     display: 'flex',
     flexDirection: 'column',

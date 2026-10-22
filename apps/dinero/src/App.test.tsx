@@ -174,20 +174,27 @@ describe('App', () => {
   it('redraws the tax brackets with keyboard controls and keeps presets in sync', () => {
     renderIn('en');
     const elections = chapter('Design your IRPF');
+    const benefits = elections.getByRole('figure', {
+      name: 'Change in yearly net pay of each wage decile with your scale',
+    });
+    const initialBenefits = benefits.textContent;
     const point = elections.getByRole('slider', { name: 'Marginal rate from €20,000' });
     expect(point.getAttribute('aria-valuenow')).toBe('20');
     fireEvent.keyDown(point, { key: 'ArrowUp' });
     expect(point.getAttribute('aria-valuenow')).toBe('21');
     fireEvent.keyDown(point, { key: 'End' });
     expect(point.getAttribute('aria-valuenow')).toBe('100');
+    expect(benefits.textContent).not.toBe(initialBenefits);
     fireEvent.keyDown(point, { key: 'ArrowUp' });
     expect(point.getAttribute('aria-valuenow')).toBe('100');
     fireEvent.click(
       elections.getByRole('button', { name: 'Advanced: exemption and bracket table' }),
     );
     expect(elections.getByLabelText('Bracket 3: rate (%)').getAttribute('value')).toBe('100');
+    expect(benefits.textContent).not.toBe(initialBenefits);
     fireEvent.click(elections.getByRole('button', { name: 'Flat 20%' }));
     expect(point.getAttribute('aria-valuenow')).toBe('20');
+    expect(benefits.textContent).toBe(initialBenefits);
   });
 
   it('fits a pointer stroke into brackets and stops drawing when cancelled', () => {
