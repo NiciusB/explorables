@@ -1,0 +1,8 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "title": "Dinero y desigualdad en España",
+  "hello": "Hola, mundo. Pronto podrás introducir tu salario y ver, tramo a tramo, cuánto pagas de IRPF.",
+  "language": "Idioma",
+  "language_es": "Español",
+  "language_en": "English"
+}

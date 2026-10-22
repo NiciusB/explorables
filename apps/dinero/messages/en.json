@@ -1,0 +1,8 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "title": "Money and inequality in Spain",
+  "hello": "Hello, world. Soon you'll be able to enter your salary and see, bracket by bracket, how much income tax (IRPF) you pay.",
+  "language": "Language",
+  "language_es": "Español",
+  "language_en": "English"
+}

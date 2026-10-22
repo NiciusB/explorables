@@ -1,0 +1,20 @@
+{
+  "name": "@explorables/dinero",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "@explorables/ui": "^0.0.0",
+    "@stylexjs/stylex": "^0.19.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@inlang/paraglide-js": "^2.29.1",
+    "@vitejs/plugin-react": "^6.1.2"
+  }
+}
