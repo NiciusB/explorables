@@ -162,7 +162,7 @@ const styles = stylex.create({
     width: '100%',
     height: 96,
   },
-  net: { fill: chart.series1, fillOpacity: 0.18 },
+  net: { fill: chart.series1 },
   irpf: { fill: chart.series2 },
   social: { fill: chart.series3 },
   cardBody: {

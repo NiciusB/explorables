@@ -99,7 +99,7 @@ export function Staircase({ gross, steps, locale }: StaircaseProps) {
                 width={stepWidth}
                 y={y(1)}
                 height={y(social + irpf) - y(1)}
-                {...stylex.props(styles.netWash)}
+                {...stylex.props(seriesStyles.net)}
               />
               <rect
                 x={left}
@@ -194,10 +194,6 @@ const styles = stylex.create({
   },
   dimmed: {
     opacity: 0.45,
-  },
-  netWash: {
-    fill: chart.series1,
-    fillOpacity: 0.18,
   },
   rateLabel: {
     fontSize: 12,
