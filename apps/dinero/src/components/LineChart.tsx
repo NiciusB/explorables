@@ -1,10 +1,10 @@
 import { chart, colors, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { useState } from 'react';
 
 import { whimsy } from '../theme.stylex';
 import { useElementWidth } from '../useElementWidth';
 import { axis, YGrid } from './chartAxes';
+import { useChartCursor } from './useChartCursor';
 
 const HEIGHT = 240;
 const MARGIN = { top: 12, right: 12, bottom: 28, left: 40 };
@@ -41,7 +41,6 @@ export function LineChart({
   label,
 }: LineChartProps) {
   const [ref, width] = useElementWidth<HTMLElement>(640);
-  const [hovered, setHovered] = useState<number | null>(null);
   const xs = [...new Set(series.flatMap((line) => line.points.map((point) => point.x)))].toSorted(
     (a, b) => a - b,
   );
@@ -53,30 +52,29 @@ export function LineChart({
     MARGIN.left + ((value - first) / Math.max(1, last - first)) * plotWidth;
   const y = (value: number) => MARGIN.top + (1 - (value - yMin) / (yMax - yMin)) * plotHeight;
   const middle = xs[Math.floor(xs.length / 2)] ?? first;
-  const xTicks = [first, middle, last];
-  const readout = hovered ?? rest ?? last;
+  const xTicks = [...new Set([first, middle, last])];
+  const cursor = useChartCursor({
+    xs,
+    labels: xs.map((at) =>
+      [
+        formatX(at),
+        ...series.map((line) => {
+          const point = line.points.find((candidate) => candidate.x === at);
+          return `${line.label}: ${point === undefined ? '—' : format(point.value)}`;
+        }),
+      ].join('\n'),
+    ),
+    label,
+    rest: rest ?? last,
+    width,
+    left: MARGIN.left,
+    right: MARGIN.right,
+  });
+  const readout = cursor.value;
 
   return (
     <figure ref={ref} aria-label={label} {...stylex.props(styles.root)}>
-      <svg
-        width={width}
-        height={HEIGHT}
-        aria-hidden
-        onPointerMove={(event) => {
-          const box = event.currentTarget.getBoundingClientRect();
-          const ratio = (event.clientX - box.left - MARGIN.left) / Math.max(1, plotWidth);
-          const target = first + Math.min(1, Math.max(0, ratio)) * (last - first);
-          // Snap to the nearest x that has data.
-          setHovered(
-            xs.reduce((best, candidate) =>
-              Math.abs(candidate - target) < Math.abs(best - target) ? candidate : best,
-            ),
-          );
-        }}
-        onPointerLeave={() => {
-          setHovered(null);
-        }}
-      >
+      <svg width={width} height={HEIGHT} {...cursor.props}>
         <YGrid
           ticks={yTicks}
           y={y}
@@ -139,6 +137,7 @@ export function LineChart({
           );
         })}
       </figcaption>
+      {cursor.tooltip}
     </figure>
   );
 }

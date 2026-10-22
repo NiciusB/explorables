@@ -13,3 +13,14 @@ p,
 ul {
   margin: 0;
 }
+
+[data-chart-target] {
+  cursor: crosshair;
+}
+
+[data-chart-target]:hover,
+[data-chart-target]:focus-visible {
+  filter: brightness(1.08);
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}

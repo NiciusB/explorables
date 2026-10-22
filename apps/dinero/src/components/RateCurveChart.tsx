@@ -2,10 +2,12 @@ import { chart, colors } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
 
 import { formatEuros, formatPercent, niceTicks } from '../format';
+import { m } from '../paraglide/messages';
 import type { Locale } from '../paraglide/runtime';
 import { whimsy } from '../theme.stylex';
 import { useElementWidth } from '../useElementWidth';
 import { XTicks, YGrid } from './chartAxes';
+import { useChartCursor } from './useChartCursor';
 
 const HEIGHT = 280;
 const MARGIN = { top: 16, right: 12, bottom: 32, left: 44 };
@@ -51,9 +53,31 @@ export function RateCurveChart({
       .join(' ');
   };
 
+  const xs = rates.map((_, index) => (index * maxBase) / Math.max(1, rates.length - 1));
+  const cursor = useChartCursor({
+    xs,
+    labels: rates.map((rate, index) =>
+      m.chart_rate_comparison({
+        base: formatEuros(xs[index] ?? 0, locale),
+        rate: formatPercent(rate, locale),
+        today: formatPercent(
+          todayRates[
+            Math.floor((index * Math.max(0, todayRates.length - 1)) / Math.max(1, rates.length - 1))
+          ] ?? 0,
+          locale,
+        ),
+      }),
+    ),
+    label,
+    rest: marker,
+    width,
+    left: MARGIN.left,
+    right: MARGIN.right,
+  });
+  const cursorIndex = Math.round((cursor.value / maxBase) * Math.max(1, rates.length - 1));
   return (
     <figure ref={ref} aria-label={label} {...stylex.props(styles.root)}>
-      <svg width={width} height={HEIGHT} aria-hidden>
+      <svg width={width} height={HEIGHT} {...cursor.props}>
         <YGrid
           ticks={Y_TICKS}
           y={y}
@@ -71,6 +95,19 @@ export function RateCurveChart({
         <path d={path(todayRates)} {...stylex.props(styles.today)} />
         <path d={path(rates)} {...stylex.props(styles.past)} />
         <line
+          x1={x(cursor.value)}
+          x2={x(cursor.value)}
+          y1={MARGIN.top}
+          y2={y(0)}
+          {...stylex.props(styles.cursor)}
+        />
+        <circle
+          cx={x(cursor.value)}
+          cy={y(rates[cursorIndex] ?? 0)}
+          r={4}
+          {...stylex.props(styles.cursorDot)}
+        />
+        <line
           x1={x(marker)}
           x2={x(marker)}
           y1={y(markerRate)}
@@ -79,12 +116,15 @@ export function RateCurveChart({
         />
         <circle cx={x(marker)} cy={y(markerRate)} r={6} {...stylex.props(styles.marker)} />
       </svg>
+      {cursor.tooltip}
     </figure>
   );
 }
 
 const styles = stylex.create({
   root: { position: 'relative', width: '100%', margin: 0 },
+  cursor: { stroke: colors.border, strokeWidth: 1.5 },
+  cursorDot: { fill: chart.series2, stroke: colors.surface, strokeWidth: 2 },
   today: {
     fill: 'none',
     stroke: colors.textMuted,

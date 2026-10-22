@@ -15,6 +15,7 @@ import { SourceNote } from './SourceNote';
 import { Stat, StatRow } from './Stat';
 import { YearPicker } from './YearPicker';
 import { prose } from './prose';
+import { useChartTooltip } from './useChartTooltip';
 
 const CURVE_POINTS = 240;
 const MIN_CHART_BASE = 150_000;
@@ -154,15 +155,21 @@ interface TopRatesProps {
 
 /** A row of little columns: the top marginal rate of every year visited. */
 function TopRates({ years, selected, locale }: TopRatesProps) {
+  const tip = useChartTooltip(
+    years.map(
+      ({ year, top }) =>
+        `${String(year)} · ${m.history_top_rates()}: ${formatPercent(top, locale)}`,
+    ),
+  );
   return (
     <figure {...stylex.props(styles.topRates)}>
       <figcaption {...stylex.props(styles.topCaption)}>{m.history_top_rates()}</figcaption>
       <ol {...stylex.props(styles.topList)}>
-        {years.map(({ year, top }) => (
+        {years.map(({ year, top }, index) => (
           <li key={year} {...stylex.props(styles.topItem)}>
             <span {...stylex.props(styles.topValue)}>{formatPercent(top, locale)}</span>
             <span
-              aria-hidden
+              {...tip.target(index)}
               {...stylex.props(
                 styles.topBar,
                 styles.topHeight(top),
@@ -173,6 +180,7 @@ function TopRates({ years, selected, locale }: TopRatesProps) {
           </li>
         ))}
       </ol>
+      {tip.tooltip}
     </figure>
   );
 }

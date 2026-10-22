@@ -1,9 +1,13 @@
 import { chart, colors, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
 
+import { formatEuros } from '../format';
+import { m } from '../paraglide/messages';
+import type { Locale } from '../paraglide/runtime';
 import { DECILES } from '../inequality/data';
 import { whimsy } from '../theme.stylex';
 import { useTween } from '../useTween';
+import { useChartTooltip } from './useChartTooltip';
 
 const HEIGHT = 220;
 
@@ -19,15 +23,36 @@ export interface DecileBarsProps {
   /** A horizontal line at the reader's own value. */
   you?: { value: number; label: string };
   label: string;
+  locale: Locale;
 }
 
 /** Ten people in a row, poorest to richest, each as tall as their decile's pay. */
-export function DecileBars({ values, ghosts, max, highlight, you, label }: DecileBarsProps) {
+export function DecileBars({
+  values,
+  ghosts,
+  max,
+  highlight,
+  you,
+  label,
+  locale,
+}: DecileBarsProps) {
+  const tip = useChartTooltip(
+    values.map((value, index) =>
+      [
+        m.chart_decile_value({ decile: String(index + 1), value: formatEuros(value, locale) }),
+        ghosts?.[index] === undefined
+          ? null
+          : m.chart_previous({ value: formatEuros(ghosts[index] ?? 0, locale) }),
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    ),
+  );
   const shown = useTween(values);
   const height = (value: number) => `${String(Math.min(100, (value / max) * 100))}%`;
   return (
     <figure aria-label={label} {...stylex.props(styles.root)}>
-      <div aria-hidden {...stylex.props(styles.plot)}>
+      <div {...stylex.props(styles.plot)}>
         {you === undefined ? null : (
           <div {...stylex.props(styles.layer)}>
             <div {...stylex.props(styles.youLine, styles.bottom(height(you.value)))}>
@@ -39,7 +64,7 @@ export function DecileBars({ values, ghosts, max, highlight, you, label }: Decil
           const decile = index + 1;
           const ghost = ghosts?.[index];
           return (
-            <div key={decile} {...stylex.props(styles.column)}>
+            <div key={decile} {...tip.target(index)} {...stylex.props(styles.column)}>
               {ghost === undefined ? null : (
                 <span {...stylex.props(styles.ghost, styles.size(height(ghost)))} />
               )}
@@ -68,6 +93,7 @@ export function DecileBars({ values, ghosts, max, highlight, you, label }: Decil
           </span>
         ))}
       </div>
+      {tip.tooltip}
     </figure>
   );
 }

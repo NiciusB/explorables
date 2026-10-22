@@ -7,6 +7,7 @@ import { m } from '../paraglide/messages';
 import type { Locale } from '../paraglide/runtime';
 import { communityName } from '../regionNames';
 import { whimsy } from '../theme.stylex';
+import { useChartTooltip } from './useChartTooltip';
 
 /** The axis starts here so differences between communities are visible; noted in the caption. */
 const AXIS_FROM = 20;
@@ -28,16 +29,25 @@ export function GiniRanking({ highlight, locale }: GiniRankingProps) {
   const width = (gini: number) => `${String(((gini - AXIS_FROM) / (AXIS_TO - AXIS_FROM)) * 100)}%`;
   const format = (gini: number) => formatNumber(gini, locale);
 
+  const tip = useChartTooltip(
+    rows.map((row) =>
+      m.chart_gini_comparison({
+        region: row.name,
+        value: format(row.gini),
+        spain: format(spain),
+      }),
+    ),
+  );
   return (
     <figure {...stylex.props(styles.root)}>
       <ol {...stylex.props(styles.list)}>
-        {rows.map((row) => (
+        {rows.map((row, index) => (
           <li
             key={row.community}
             {...stylex.props(styles.row, row.community === highlight && styles.mine)}
           >
             <span {...stylex.props(styles.name)}>{row.name}</span>
-            <span aria-hidden {...stylex.props(styles.track)}>
+            <span {...tip.target(index)} {...stylex.props(styles.track)}>
               <span
                 {...stylex.props(
                   styles.bar,
@@ -54,6 +64,7 @@ export function GiniRanking({ highlight, locale }: GiniRankingProps) {
       <figcaption {...stylex.props(styles.caption)}>
         {m.gini_caption({ spain: format(spain), from: String(AXIS_FROM) })}
       </figcaption>
+      {tip.tooltip}
     </figure>
   );
 }

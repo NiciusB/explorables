@@ -1,9 +1,11 @@
 import { colors, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
 
+import { m } from '../paraglide/messages';
 import { DECILES } from '../inequality/data';
 import { whimsy } from '../theme.stylex';
 import { useTween } from '../useTween';
+import { useChartTooltip } from './useChartTooltip';
 
 export interface PercentileRulerProps {
   /** 0 to 100. */
@@ -15,21 +17,36 @@ export interface PercentileRulerProps {
 
 /** A ruler of ten deciles with a pin sliding to the reader's place. */
 export function PercentileRuler({ percentile, pin, label }: PercentileRulerProps) {
+  const tip = useChartTooltip([
+    ...DECILES.map((cell) =>
+      m.chart_percentile_range({
+        decile: String(cell),
+        from: String((cell - 1) * 10),
+        to: String(cell * 10),
+      }),
+    ),
+    m.chart_pin({ pin, percentile: String(Math.round(percentile)) }),
+  ]);
   const [shown = percentile] = useTween([percentile]);
   const decile = Math.min(10, Math.floor(percentile / 10) + 1);
   return (
     <figure aria-label={label} {...stylex.props(styles.root)}>
-      <div aria-hidden {...stylex.props(styles.track)}>
+      <div {...stylex.props(styles.track)}>
         {DECILES.map((cell) => (
-          <span key={cell} {...stylex.props(styles.cell, cell === decile && styles.cellActive)}>
+          <span
+            key={cell}
+            {...tip.target(cell - 1)}
+            {...stylex.props(styles.cell, cell === decile && styles.cellActive)}
+          >
             {cell}
           </span>
         ))}
-        <span {...stylex.props(styles.pin, styles.pinAt(Math.min(99, shown)))}>
+        <span {...tip.target(10)} {...stylex.props(styles.pin, styles.pinAt(Math.min(99, shown)))}>
           <span {...stylex.props(styles.pinLabel)}>{pin}</span>
           <span {...stylex.props(styles.pinStem)} />
         </span>
       </div>
+      {tip.tooltip}
     </figure>
   );
 }

@@ -4,6 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 import { DECILES } from '../inequality/data';
 import { m } from '../paraglide/messages';
 import { useTween } from '../useTween';
+import { useChartTooltip } from './useChartTooltip';
 
 export interface ChangeBarsProps {
   /** One change per decile, poorest first: positive means more money for that decile. */
@@ -14,6 +15,14 @@ export interface ChangeBarsProps {
 
 /** Ten rows of gains (right, blue) and losses (left, orange) around a zero line. */
 export function ChangeBars({ values, format, label }: ChangeBarsProps) {
+  const tip = useChartTooltip(
+    DECILES.map((decile) =>
+      m.chart_change({
+        decile: String(decile),
+        value: format(values[decile - 1] ?? 0),
+      }),
+    ),
+  );
   const shown = useTween(values);
   const max = Math.max(1, ...values.map((value) => Math.abs(value)));
   return (
@@ -27,7 +36,7 @@ export function ChangeBars({ values, format, label }: ChangeBarsProps) {
               <span {...stylex.props(styles.decile)}>
                 {m.decile_short({ number: String(decile) })}
               </span>
-              <span aria-hidden {...stylex.props(styles.track)}>
+              <span {...tip.target(decile - 1)} {...stylex.props(styles.track)}>
                 <span {...stylex.props(styles.zero)} />
                 <span
                   {...stylex.props(
@@ -42,6 +51,7 @@ export function ChangeBars({ values, format, label }: ChangeBarsProps) {
           );
         })}
       </ol>
+      {tip.tooltip}
     </figure>
   );
 }

@@ -16,6 +16,7 @@ import { ForalNote } from './ForalNote';
 import { SourceNote } from './SourceNote';
 import { Stat, StatRow } from './Stat';
 import { prose } from './prose';
+import { useChartTooltip } from './useChartTooltip';
 
 const CHART_MAX = 250_000;
 const CHART_STEP = 2500;
@@ -175,20 +176,39 @@ interface LaneProps {
 
 /** One way of earning the money, as a bar split into who gets what. */
 function Lane({ title, parts, total, locale }: LaneProps) {
+  const labels: Record<string, string> = {
+    ss: m.legend_social_security(),
+    irpf: m.legend_irpf(),
+    net: m.legend_net(),
+  };
+  const tip = useChartTooltip(
+    parts.map(
+      (part) =>
+        `${title}\n${m.chart_income_segment({
+          label: labels[part.key] ?? part.key,
+          amount: formatEuros(part.amount, locale),
+          share: formatPercent(total > 0 ? part.amount / total : 0, locale),
+        })}`,
+    ),
+  );
   const shares = useTween(parts.map((part) => (total > 0 ? Math.max(0, part.amount) / total : 0)));
   return (
     <div {...stylex.props(styles.lane)}>
       <span {...stylex.props(styles.laneTitle)}>{title}</span>
-      <div aria-hidden {...stylex.props(styles.bar)}>
-        {parts.map((part, index) => (
-          <span
-            key={part.key}
-            {...stylex.props(styles.segment, part.series, styles.grow(shares[index] ?? 0))}
-          >
-            {(shares[index] ?? 0) > 0.08 ? formatPercent(shares[index] ?? 0, locale) : null}
-          </span>
-        ))}
+      <div {...stylex.props(styles.bar)}>
+        {parts.map((part, index) =>
+          part.amount <= 0 ? null : (
+            <span
+              key={part.key}
+              {...tip.target(index)}
+              {...stylex.props(styles.segment, part.series, styles.grow(shares[index] ?? 0))}
+            >
+              {(shares[index] ?? 0) > 0.08 ? formatPercent(shares[index] ?? 0, locale) : null}
+            </span>
+          ),
+        )}
       </div>
+      {tip.tooltip}
     </div>
   );
 }

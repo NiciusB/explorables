@@ -9,6 +9,7 @@ import { m } from '../paraglide/messages';
 import type { Locale } from '../paraglide/runtime';
 import { ramp } from '../theme.stylex';
 import { useTween } from '../useTween';
+import { useChartTooltip } from './useChartTooltip';
 
 type View = 'people' | 'wealth';
 
@@ -31,6 +32,16 @@ const GROUP_STYLES = [
 export function WealthMorph({ locale }: { locale: Locale }) {
   const [view, setView] = useState<View>('people');
   const groups = wealthShares();
+  const tip = useChartTooltip(
+    groups.map((group) =>
+      m.chart_wealth_group({
+        from: String(group.from),
+        to: String(group.to),
+        people: formatPercent((group.to - group.from) / 100, locale),
+        wealth: formatPercent(group.share, locale),
+      }),
+    ),
+  );
   const target = groups.map((group) =>
     view === 'people' ? (group.to - group.from) / 100 : group.share,
   );
@@ -48,10 +59,11 @@ export function WealthMorph({ locale }: { locale: Locale }) {
         value={view}
         onChange={setView}
       />
-      <div aria-hidden {...stylex.props(styles.bar)}>
+      <div {...stylex.props(styles.bar)}>
         {groups.map((group, index) => (
           <span
             key={group.from}
+            {...tip.target(index)}
             {...stylex.props(styles.segment, GROUP_STYLES[index], styles.grow(shares[index] ?? 0))}
           >
             {(shares[index] ?? 0) > 0.06 ? formatPercent(shares[index] ?? 0, locale) : null}
@@ -67,6 +79,7 @@ export function WealthMorph({ locale }: { locale: Locale }) {
           </li>
         ))}
       </ul>
+      {tip.tooltip}
     </figure>
   );
 }

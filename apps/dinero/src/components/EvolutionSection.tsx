@@ -65,6 +65,7 @@ export function EvolutionSection({ profile, locale }: EvolutionSectionProps) {
         onChange={setYear}
       />
       <DecileBars
+        locale={locale}
         values={shown}
         ghosts={first}
         max={max}

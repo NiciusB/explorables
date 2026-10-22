@@ -57,6 +57,7 @@ export function InequalitySection({ profile, locale }: InequalitySectionProps) {
       <h3 {...stylex.props(prose.subheading)}>{m.parade_title()}</h3>
       <p>{m.parade_lede({ year: String(LATEST_SALARY_YEAR) })}</p>
       <DecileBars
+        locale={locale}
         values={yearly}
         max={Math.max(...yearly, profile.gross) * 1.05}
         highlight={decile}

@@ -1,11 +1,13 @@
 import { colors, space } from '@explorables/ui/tokens.stylex';
 import * as stylex from '@stylexjs/stylex';
 
-import { formatPercent } from '../format';
+import { formatEuros, formatPercent } from '../format';
+import { m } from '../paraglide/messages';
 import type { Locale } from '../paraglide/runtime';
 import type { SalaryBreakdown } from '../tax/irpf';
 import { irpfRate, type Step } from '../tax/marginal';
 import { seriesStyles } from './Legend';
+import { useChartTooltip } from './useChartTooltip';
 
 /** Segments narrower than this share of the bar get no label. */
 const MIN_LABEL_SHARE = 0.06;
@@ -21,17 +23,18 @@ interface Segment {
   share: number;
   series: stylex.StyleXStyles;
   label: string;
+  detail: string;
 }
 
 /** One bar for the whole gross salary: Social Security, then IRPF slice by slice, then net. */
 export function JourneyBar({ breakdown, steps, locale }: JourneyBarProps) {
   const { gross, socialSecurity, net } = breakdown;
-  if (gross <= 0) return null;
-  const share = (amount: number) => amount / gross;
+  const share = (amount: number) => amount / Math.max(1, gross);
 
   const segments: Segment[] = [
     {
       key: 'socialSecurity',
+      detail: m.legend_social_security(),
       share: share(socialSecurity),
       series: seriesStyles.socialSecurity,
       label: formatPercent(share(socialSecurity), locale),
@@ -40,24 +43,37 @@ export function JourneyBar({ breakdown, steps, locale }: JourneyBarProps) {
       .filter((step) => step.irpf > 0)
       .map((step) => ({
         key: `irpf-${String(step.from)}`,
+        detail: `${m.legend_irpf()} · ${m.tooltip_range({ from: formatEuros(step.from, locale), to: formatEuros(step.to, locale) })}`,
         share: share(step.irpf),
         series: seriesStyles.irpf,
         label: formatPercent(irpfRate(step), locale),
       })),
     {
       key: 'net',
+      detail: m.legend_net(),
       share: share(net),
       series: seriesStyles.net,
       label: formatPercent(share(net), locale),
     },
   ].filter((segment) => segment.share > 0);
 
+  const tip = useChartTooltip(
+    segments.map((segment) =>
+      m.chart_journey_segment({
+        label: segment.detail,
+        amount: formatEuros(segment.share * gross, locale),
+        share: formatPercent(segment.share, locale),
+      }),
+    ),
+  );
+  if (gross <= 0) return null;
   return (
-    <div aria-hidden {...stylex.props(styles.root)}>
+    <div {...stylex.props(styles.root)}>
       <div {...stylex.props(styles.row)}>
-        {segments.map((segment) => (
+        {segments.map((segment, index) => (
           <div
             key={segment.key}
+            {...tip.target(index)}
             {...stylex.props(styles.fill, segment.series, styles.width(segment.share))}
           />
         ))}
@@ -69,6 +85,7 @@ export function JourneyBar({ breakdown, steps, locale }: JourneyBarProps) {
           </div>
         ))}
       </div>
+      {tip.tooltip}
     </div>
   );
 }

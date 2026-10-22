@@ -232,5 +232,15 @@
   "pay_hint_net14": "With two extra payments",
   "pay_hint_gross": "Before tax and contributions",
   "pay_amount_gross": "per year, before tax and contributions",
-  "pay_amount_net": "per payment, what reaches your account"
+  "pay_amount_net": "per payment, what reaches your account",
+  "chart_decile_value": "Decile {decile}: {value} gross per year",
+  "chart_previous": "Earlier value: {value}",
+  "chart_percentile_range": "Decile {decile}: percentiles {from}–{to}",
+  "chart_pin": "{pin}: percentile {percentile}",
+  "chart_rate_comparison": "Taxable base: {base}\nSelected scale: {rate}\n2026 scale: {today}",
+  "chart_wealth_group": "Wealth percentiles {from}–{to}\nHouseholds: {people}\nWealth: {wealth}",
+  "chart_gini_comparison": "{region}: {value}\nSpain: {spain}",
+  "chart_change": "Decile {decile}: {value} net per year",
+  "chart_journey_segment": "{label}: {amount} per year ({share} of gross)",
+  "chart_income_segment": "{label}: {amount} per year ({share} of total)"
 }
