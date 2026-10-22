@@ -1,0 +1,22 @@
+{
+  "name": "@explorables/ui",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.stylex": "./src/tokens.stylex.ts",
+    "./vite-plugin": "./vite-plugin.ts"
+  },
+  "scripts": {
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.9.0",
+    "@stylexjs/stylex": "^0.19.1",
+    "@stylexjs/unplugin": "^0.19.1"
+  },
+  "peerDependencies": {
+    "react": "^19.3.1"
+  }
+}
