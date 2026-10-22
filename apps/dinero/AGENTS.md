@@ -28,7 +28,7 @@ All six chapters are built in Spanish and English. Salary input is optional: the
 2. **Historical taxation.** How IRPF scales have changed over time, comparing 2026 with hand-picked historical years.
 3. **Current inequality.** Income and wealth distribution today.
 4. **Historical inequality.** How the distribution has evolved.
-5. **Salary vs. capital gains taxation.** Work income (escala general) vs. savings income (escala del ahorro).
+5. **Salary vs. capital gains taxation.** Work income (escala general) vs. savings income (escala del ahorro). Examples compare the SMI, rental homes at a fixed 1,000 €/month each, and a salary matching their gross rent, with IRPF shares and rental costs shown separately. Only the number of homes is editable (three by default); costs per home stay fixed.
 6. **Design your IRPF.** Draw a marginal-rate curve with a finger or mouse (keyboard-accessible points), approximated with eight brackets; edit the exemption and exact brackets in an advanced section. Try illustrative presets and see changes in net income for the salary in use and each wage decile. Add party proposals with primary sources when available.
 
 ## Comparison decisions
@@ -36,6 +36,7 @@ All six chapters are built in Spanish and English. Salary input is optional: the
 - Historical taxation compares tariffs on a fixed, inflation-adjusted taxable base, not reconstructed take-home pay. Historical deductions and minimums are out of scope; 1979 includes the 40% average-rate cap and 2012 uses the reference regional scale. Tests check published cumulative quotas.
 - Salary percentiles interpolate within published deciles and cap at 90 above the top-decile threshold. Household consumption units assume the entered children are under 14, as stated on the page.
 - Capital-income and sandbox chapters use common-regime rules. Basque/Navarra profiles explicitly substitute Castilla-La Mancha, whose scale and minimums match the state's. The salary chapter uses the reader's actual foral system.
+- Rental examples assume mortgage-free homes let all year, illustrative repairs, IBI, community fees and insurance, a 100,000 € construction basis per home for 3% tax depreciation, and new residential contracts eligible for the ordinary 50% reduction. Depreciation reduces taxable income but is not a cash outflow; repairs exclude improvements. All three examples use the same selected region and situation, with no other income.
 - Capital comparisons include employee Social Security; employer contributions and corporate tax are described but not calculated. The next-1,000 € comparison keeps the existing salary and accounts for unused personal allowances.
 - Sandbox designs replace both tariffs together, keeping work reductions and the minimum-wage deduction. They do not estimate revenue or model any party unless explicitly sourced.
 - Integration tests cover optional salary, cross-chapter updates and reset, year selection, household controls, capital overrides and bracket editing. Playback controls have timer tests; pure tax and distribution functions have unit tests.

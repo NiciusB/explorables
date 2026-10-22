@@ -47,8 +47,8 @@ export function CapitalSection({ profile, locale }: CapitalSectionProps) {
   return (
     <div {...stylex.props(prose.root)}>
       <p>{m.capital_intro()}</p>
-      <CapitalExamples locale={locale} />
       <ForalNote region={profile.region} />
+      <CapitalExamples profile={profile} locale={locale} />
       <div {...stylex.props(styles.controls)}>
         <NumberField
           label={m.capital_amount_label()}

@@ -8,6 +8,25 @@ export interface Source {
 }
 
 export const sources = {
+  rentalExpenses: {
+    title: 'Cálculo del rendimiento del alquiler: gastos deducibles',
+    publisher: 'Agencia Tributaria',
+    url: 'https://sede.agenciatributaria.gob.es/Sede/vivienda-otros-inmuebles/tributacion-arrendador-viviendas-otros-inmuebles/calculo-rendimiento-alquiler-inmueble/gastos-deducibles.html',
+    accessed: '2026-10-23',
+  },
+  rentalReduction: {
+    title:
+      'Principales novedades tributarias introducidas por la Ley 12/2023, de 24 de mayo, por el derecho a la vivienda',
+    publisher: 'Agencia Tributaria',
+    url: 'https://sede.agenciatributaria.gob.es/Sede/irpf/novedades-impuesto/novedades-normativa-2023/principales-novedades-ley-12-2023-mayo.html',
+    accessed: '2026-10-23',
+  },
+  rentalDepreciation: {
+    title: 'Manual práctico de Renta 2025: cantidades destinadas a la amortización',
+    publisher: 'Agencia Tributaria',
+    url: 'https://sede.agenciatributaria.gob.es/Sede/ayuda/manuales-videos-folletos/manuales-practicos/irpf-2025/c04-rendimientos-capital-inmobiliario/gastos-deducibles/cantidades-destinadas-amortizacion.html',
+    accessed: '2026-10-23',
+  },
   smi2026: {
     title:
       'Real Decreto 126/2026, de 18 de febrero, por el que se fija el salario mínimo interprofesional para 2026',
