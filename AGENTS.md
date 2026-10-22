@@ -28,9 +28,17 @@ A good explorable:
 
 Each explorable is its own app under `apps/<explorable-name>/`, with its own `AGENTS.md` for topic-specific decisions. Shared code lives under `packages/`.
 
-- `apps/dinero/`: money and inequality in Spain.
-- `packages/ui/` (`@explorables/ui`): shared components built on Base UI and styled with StyleX. Theme tokens live in `@explorables/ui/tokens.stylex`; every app and package loads StyleX through `stylexPlugin()` from `@explorables/ui/vite-plugin`.
+- `apps/home/`: the front page at `/`, listing every explorable.
+- `apps/dinero/`: money and inequality in Spain, at `/dinero/`.
+- `packages/ui/` (`@explorables/ui`): shared components built on Base UI and styled with StyleX, including the `Page` shell (reading column, home link, language control) and `mountApp()`. Theme and chart tokens live in `@explorables/ui/tokens.stylex`.
+- `packages/vite-config/` (`@explorables/vite-config`): `defineExplorableConfig({ path })` gives every app the same plugins (Paraglide, StyleX, React), test setup, and output folder. An app's whole `vite.config.ts` is one call to it.
 - Root `vite.config.ts` holds the lint (Oxlint, strict, type-aware) and format config for the whole repo; `.fallowrc.json` holds Fallow's. Per-package `vite.config.ts` files only set plugins and test options.
+
+## Deployment
+
+The site is one static folder served by nginx at explorables.balbona.me. `vp run build:site` clears `dist/` and builds every app into it: `home` at the root, each explorable in `dist/<path>/` with `base: '/<path>/'`. Apps are separate Vite builds so each keeps its own dependencies and bundle. Locale choice is shared across apps through Paraglide's `localStorage` key (same origin).
+
+To add an explorable: create `apps/<path>/` with `defineExplorableConfig({ path: '<path>' })`, then list it in `apps/home/src/explorables.ts`.
 
 ## Stack
 
@@ -41,8 +49,8 @@ Each explorable is its own app under `apps/<explorable-name>/`, with its own `AG
 - Monorepo / test / formatting / linting / git hooks: Vite+ (`vp`)
 - Code quality: Fallow
 - Pre-commit hook and CI (GitHub Actions): `vp run check`
-- Paraglide: never run it manually; the Vite plugin compiles messages during `vp dev`, `vp build`, and `vp test`. Output (`src/paraglide/`) is gitignored, which is why `vp run check` builds first.
-- Dev server: `vp -C apps/<explorable-name> dev`.
+- Paraglide: never run it manually; the Vite plugin compiles messages during `vp dev`, `vp build`, and `vp test`. Output (`src/paraglide/`) is gitignored, which is why `vp run check` builds the site first.
+- Dev server: `vp -C apps/<explorable-name> dev` (an explorable is served under its path, e.g. `/dinero/`).
 
 ## Rules
 

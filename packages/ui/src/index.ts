@@ -1,5 +1,9 @@
 export { Disclosure } from './Disclosure';
 export type { DisclosureProps } from './Disclosure';
+export { mountApp } from './mountApp';
+export type { MountOptions } from './mountApp';
+export { Page } from './Page';
+export type { PageProps } from './Page';
 export { NumberField } from './NumberField';
 export type { NumberFieldProps } from './NumberField';
 export { SegmentedControl } from './SegmentedControl';

@@ -1,0 +1,17 @@
+{
+  "name": "@explorables/vite-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "@inlang/paraglide-js": "^2.29.1",
+    "@stylexjs/unplugin": "^0.19.1",
+    "@vitejs/plugin-react": "^6.1.2"
+  }
+}

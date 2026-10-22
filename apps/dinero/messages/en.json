@@ -3,8 +3,6 @@
   "title": "Money and inequality in Spain",
   "lede": "How much you earn, how much you pay, and how that compares with everyone else. An interactive exploration built on official data.",
   "language": "Language",
-  "language_es": "Español",
-  "language_en": "English",
   "salary_title": "Your salary",
   "salary_prompt": "Let's start with something concrete: how much do you earn? Enter it the way you know it, gross per year or net per month.",
   "salary_amount_label": "Amount",
@@ -71,5 +69,6 @@
   "region_la_rioja": "La Rioja",
   "region_madrid": "Community of Madrid",
   "region_murcia": "Region of Murcia",
-  "region_valencia": "Valencian Community"
+  "region_valencia": "Valencian Community",
+  "home_link": "Explorables"
 }

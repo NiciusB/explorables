@@ -3,8 +3,6 @@
   "title": "Dinero y desigualdad en España",
   "lede": "Cuánto ganas, cuánto pagas y cómo se compara con el resto. Una exploración interactiva con datos oficiales.",
   "language": "Idioma",
-  "language_es": "Español",
-  "language_en": "English",
   "salary_title": "Tu sueldo",
   "salary_prompt": "Empecemos por lo concreto: ¿cuánto cobras? Escríbelo como lo sepas, en bruto al año o en neto al mes.",
   "salary_amount_label": "Importe",
@@ -71,5 +69,6 @@
   "region_la_rioja": "La Rioja",
   "region_madrid": "Comunidad de Madrid",
   "region_murcia": "Región de Murcia",
-  "region_valencia": "Comunitat Valenciana"
+  "region_valencia": "Comunitat Valenciana",
+  "home_link": "Explorables"
 }

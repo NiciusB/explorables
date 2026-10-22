@@ -5,18 +5,20 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./tokens.stylex": "./src/tokens.stylex.ts",
-    "./vite-plugin": "./vite-plugin.ts"
+    "./tokens.stylex": "./src/tokens.stylex.ts"
   },
   "scripts": {
     "test": "vp test run"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
-    "@stylexjs/stylex": "^0.19.1",
-    "@stylexjs/unplugin": "^0.19.1"
+    "@stylexjs/stylex": "^0.19.1"
+  },
+  "devDependencies": {
+    "@explorables/vite-config": "^0.0.0"
   },
   "peerDependencies": {
-    "react": "^19.3.1"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   }
 }

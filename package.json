@@ -8,7 +8,8 @@
   ],
   "type": "module",
   "scripts": {
-    "check": "vp run -r build && vp check && vp run -r test && fallow",
+    "build:site": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && vp run -r build",
+    "check": "vp run build:site && vp check && vp run -r test && fallow",
     "prepare": "vp config --no-agent"
   },
   "devDependencies": {

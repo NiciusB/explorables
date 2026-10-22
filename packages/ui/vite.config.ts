@@ -1,6 +1,5 @@
+import { stylexPlugin } from '@explorables/vite-config';
 import { defineConfig } from 'vite-plus';
-
-import { stylexPlugin } from './vite-plugin';
 
 export default defineConfig({
   plugins: [stylexPlugin()],
