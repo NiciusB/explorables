@@ -15,7 +15,7 @@ import {
 } from '../sandbox/drawScale';
 import { rateAt } from '../tax/scale';
 
-interface DrawScaleProps {
+export interface DrawScaleProps {
   design: Design;
   onChange: (design: Design) => void;
   locale: Locale;
