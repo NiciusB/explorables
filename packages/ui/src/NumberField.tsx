@@ -1,6 +1,8 @@
 import { NumberField as BaseNumberField } from '@base-ui/react/number-field';
 import * as stylex from '@stylexjs/stylex';
-import { useId } from 'react';
+import { useCallback, useId, useMemo } from 'react';
+
+import { createNumberEditing } from './numberEditing';
 
 import { colors, fonts, space } from './tokens.stylex';
 
@@ -34,6 +36,24 @@ export function NumberField({
   locale,
 }: NumberFieldProps) {
   const id = useId();
+  const editing = useMemo(() => createNumberEditing(locale, format), [locale, format]);
+  const inputRef = useCallback(
+    (input: HTMLInputElement | null) => {
+      if (input === null) return undefined;
+      // Mobile keyboards can delete without firing keydown. Listen to the native
+      // beforeinput event because React's beforeinput does not expose inputType reliably.
+      const beforeInput = (event: InputEvent) => {
+        if (event.inputType === 'deleteContentBackward') {
+          editing.prepareDeletion(input, 'Backspace');
+        } else if (event.inputType === 'deleteContentForward') {
+          editing.prepareDeletion(input, 'Delete');
+        }
+      };
+      input.addEventListener('beforeinput', beforeInput);
+      return () => input.removeEventListener('beforeinput', beforeInput);
+    },
+    [editing],
+  );
   return (
     <BaseNumberField.Root
       id={id}
@@ -56,6 +76,31 @@ export function NumberField({
           −
         </BaseNumberField.Decrement>
         <BaseNumberField.Input
+          ref={inputRef}
+          onChange={(event) => {
+            if (!(event.nativeEvent instanceof InputEvent) || !event.nativeEvent.isComposing) {
+              editing.formatInput(event.currentTarget);
+            }
+          }}
+          onKeyDown={(event) => {
+            if (!event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey) {
+              editing.prepareDeletion(event.currentTarget, event.key);
+            }
+          }}
+          onPaste={(event) => {
+            // Base UI normally inserts pasted text after its change handler. Route it through
+            // the native input event instead, so paste follows the same formatting/caret path.
+            event.preventDefault();
+            const input = event.currentTarget;
+            const start = input.selectionStart ?? 0;
+            const end = input.selectionEnd ?? start;
+            const text = event.clipboardData.getData('text/plain');
+            const next = input.value.slice(0, start) + text + input.value.slice(end);
+            const descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+            descriptor?.set?.call(input, next);
+            input.setSelectionRange(start + text.length, start + text.length);
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+          }}
           {...stylex.props(styles.input, size === 'large' && styles.largeInput)}
         />
         <BaseNumberField.Increment aria-label={incrementLabel} {...stylex.props(styles.stepper)}>
