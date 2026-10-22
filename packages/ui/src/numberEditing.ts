@@ -15,12 +15,7 @@ export function createNumberEditing(locale?: string, format?: Intl.NumberFormatO
   function formatInput(input: HTMLInputElement) {
     if (group.length === 0) return;
     const text = input.value;
-    const decimalIndex = decimal.length > 0 ? text.indexOf(decimal) : -1;
-    const integerEnd = decimalIndex < 0 ? text.length : decimalIndex;
-    let start = 0;
-    while (start < integerEnd && !/[0-9]/.test(text[start] ?? '')) start++;
-    let end = start;
-    while (end < integerEnd && (/[0-9]/.test(text[end] ?? '') || text[end] === group)) end++;
+    const { start, end } = findIntegerRange(text, decimal, group);
     const digits = text.slice(start, end).split(group).join('');
     if (!digits) return;
     // Preserve leading zeros as editing text; the committed value is canonicalized on blur.
@@ -29,18 +24,7 @@ export function createNumberEditing(locale?: string, format?: Intl.NumberFormatO
     if (next === text) return;
     const selectionStart = input.selectionStart ?? text.length;
     const selectionEnd = input.selectionEnd ?? selectionStart;
-    function mapPosition(position: number) {
-      if (position <= start) return position;
-      if (position >= end) return position + next.length - text.length;
-      const digitCount = text.slice(start, position).split(group).join('').length;
-      let seen = 0;
-      let index = 0;
-      while (index < integer.length && seen < digitCount) {
-        if (integer[index] !== group) seen++;
-        index++;
-      }
-      return start + index;
-    }
+    const mapPosition = createCaretMapper(text, integer, start, end, group);
     input.value = next;
     input.setSelectionRange(mapPosition(selectionStart), mapPosition(selectionEnd));
   }
@@ -59,4 +43,36 @@ export function createNumberEditing(locale?: string, format?: Intl.NumberFormatO
   }
 
   return { formatInput, prepareDeletion };
+}
+
+/** Locate the integer independently of currency symbols and the fractional part. */
+function findIntegerRange(text: string, decimal: string, group: string) {
+  const integerText = decimal.length === 0 ? text : (text.split(decimal, 1)[0] ?? '');
+  const start = integerText.search(/[0-9]/);
+  if (start < 0) return { start: 0, end: 0 };
+  let end = start;
+  while (end < integerText.length && (/[0-9]/.test(text[end] ?? '') || text[end] === group)) end++;
+  return { start, end };
+}
+
+/** Keep selections attached to digits when separators move around them. */
+function createCaretMapper(
+  text: string,
+  integer: string,
+  start: number,
+  end: number,
+  group: string,
+) {
+  return (position: number) => {
+    if (position <= start) return position;
+    if (position >= end) return position + integer.length - (end - start);
+    const digitCount = text.slice(start, position).split(group).join('').length;
+    let seen = 0;
+    let index = 0;
+    while (index < integer.length && seen < digitCount) {
+      if (integer[index] !== group) seen++;
+      index++;
+    }
+    return start + index;
+  };
 }
